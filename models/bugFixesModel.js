@@ -5,11 +5,11 @@ const userAttemptSchema = new mongoose.Schema(
     bugReport: {
       type: mongoose.Schema.ObjectId,
       ref: 'BugReport',
-      required: [true, '']
+      required: [true, 'The bug origin must be defined!']
     },
     solution: {
       type: String,
-      required: true
+      required: [true, 'Solution is required']
     },
     testingSteps: {
       type: String
@@ -20,7 +20,7 @@ const userAttemptSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: true
+      required: [true, 'Bug solution must have a user']
     },
     createdAt: {
       type: Date,

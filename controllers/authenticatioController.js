@@ -3,9 +3,9 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
 // const APIFeatures = require('./../utils/apiFeatures');
-const catchAsync = require('./../utils/catchAsync');
-const AppError = require('./../utils/appError');
-const sendEmail = require('./../utils/email');
+const catchAsync = require('../utils/catchAsync');
+const appError = require('../utils/appError');
+const sendEmail = require('../utils/email');
 
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -53,16 +53,23 @@ exports.signUp = catchAsync(async (req, res, next) => {
 });
 
 exports.logIn = catchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
-  // check if email and password exist
-  if (!email || !password) {
-    return next(new AppError('Please provide email and password!', 400));
+  const { email, username, password } = req.body;
+  // check if email or username and password exist
+  if (!((email || username) && password)) {
+    return next(
+      appError(
+        'Please provide a valid username or email address and a password!',
+        400
+      )
+    );
   }
   // check if user exists && password is correct
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ $or: [{ email }, { username }] }).select(
+    '+password'
+  );
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password!', 401));
+    return next(appError('Incorrect credentials!', 401));
   }
   // check if everything is ok and send token to client
   createAndSendToken(user, 200, res);
@@ -80,7 +87,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (!token) {
     return next(
-      new AppError('You are not loged in! Please log in to get access', 401)
+      appError('You are not loged in! Please log in to get access', 401)
     );
   }
   // validate the token (verification)
@@ -90,14 +97,14 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   if (!currentUser) {
     return next(
-      new AppError('The user belonging to this token does no loger exist.', 401)
+      appError('The user belonging to this token does no loger exist.', 401)
     );
   }
 
   // check if user change password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(
-      new AppError('User recently changed password! Please login again!', 401)
+      appError('User recently changed password! Please login again!', 401)
     );
   }
 
@@ -110,7 +117,18 @@ exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
       return next(
-        new AppError('You do not have permission to perform this action', 403)
+        appError('You do not have permission to perform this action', 403)
+      );
+    }
+    next();
+  };
+};
+
+exports.actionStatus = (...status) => {
+  return (req, res, next) => {
+    if (!status.includes(req.user.role)) {
+      return next(
+        appError('You do not have permission to perform this action', 403)
       );
     }
     next();
@@ -122,7 +140,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new AppError('There is no user with that email address', 404));
+    return next(appError('There is no user with that email address', 404));
   }
   // generate random token
   const resetToken = user.createPasswordResetToken();
@@ -133,7 +151,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     'host'
   )}/api/v1/users/resetPassword/${resetToken}`;
 
-  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email`;
+  const message = `Forgot your password?\n Submit a PATCH request with your new password to: ${resetURL}.\nIf you didn't forget your password, please ignore this email`;
   try {
     await sendEmail({
       email: user.email,
@@ -151,8 +169,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     return next(
-      new AppError(
-        'There was an error sending this email, please try again later!',
+      appError(
+        'there was an error sending this email, please try again later!',
         500
       )
     );
@@ -173,7 +191,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // set tne new password if token has not expired and user still exist
 
   if (!user) {
-    return next(new AppError('Token has expired!', 400));
+    return next(appError('Token has expired!', 400));
   }
 
   user.password = req.body.password;
@@ -192,7 +210,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
   // check if password is correct
   if (!(await user.correctPassword(passwordCurent, user.password))) {
-    return next(new AppError('Your current password is wrong!', 401));
+    return next(appError('Your current password is wrong!', 401));
   }
 
   // update the password
