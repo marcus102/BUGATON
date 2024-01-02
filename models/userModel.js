@@ -15,18 +15,21 @@ const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, 'User must have a username!'],
-    unique: true,
-    trim: true,
-    validate: {
-      validator: async function(value) {
-        const existingUser = await this.constructor.findOne({
-          username: value
-        });
-        return !existingUser;
-      },
-      message:
-        'Sorry, the username is already in use. Please choose another one!'
-    }
+    unique: [
+      true,
+      'Sorry, the username is already in use. Please choose another one!'
+    ],
+    trim: true
+    // validate: {
+    //   validator: async function(value) {
+    //     const existingUser = await this.constructor.findOne({
+    //       username: value
+    //     });
+    //     return !existingUser;
+    //   },
+    //   message:
+    //     'Sorry, the username is already in use. Please choose another one!'
+    // }
   },
   email: {
     type: String,
@@ -35,14 +38,14 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     validate: [
-      {
-        validator: async function(value) {
-          const existingUser = await this.constructor.findOne({ email: value });
-          return !existingUser;
-        },
-        message:
-          'Sorry, the email address is already in use. Please choose another one!'
-      },
+      // {
+      //   validator: async function(value) {
+      //     const existingUser = await this.constructor.findOne({ email: value });
+      //     return !existingUser;
+      //   },
+      //   message:
+      //     'Sorry, the email address is already in use. Please choose another one!'
+      // },
       {
         validator: validator.isEmail,
         message: 'Please provide a valid email!'
