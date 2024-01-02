@@ -7,7 +7,7 @@ const reviewSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
-    product: {
+    post: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'UserAttempt',
       required: true
@@ -32,6 +32,18 @@ const reviewSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
+
+reviewSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'user',
+    select: 'username profile'
+  }).populate({
+    path: 'post',
+    select: 'solution user status'
+  });
+
+  next();
+});
 
 const Review = mongoose.model('Review', reviewSchema);
 

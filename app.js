@@ -3,20 +3,21 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const globalErrorHandler = require('./controllers/errorsController');
 const appError = require('./utils/appError');
-const bugHandlerRoute = require('./routes/bugHandlerRoutes');
-const userRoute = require('./routes/userRoutes');
-const reviewRoute = require('./routes/reviewsRoutes');
-const analyticsRoute = require('./routes/analyticsRoutes');
-const apiIntegrationsRoute = require('./routes/apiIntegrationsRoutes');
-const collaborationRoute = require('./routes/collaborationRoutes');
-const discussionRoute = require('./routes/discussionRoutes');
-const docsRoute = require('./routes/docsRoutes');
-const eventRoute = require('./routes/eventRoutes');
-const feedbackRoute = require('./routes/feedbackRoutes');
-const searchRoute = require('./routes/searchRoutes');
-const socialRoute = require('./routes/socialRoutes');
-const trainingRoute = require('./routes/trainingRoutes');
-const commentRoute = require('./routes/commentsRoutes');
+const bugReportRouter = require('./routes/bugReportRoutes');
+const bugFixesRouter = require('./routes/bugFixesRoutes');
+const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewsRoutes');
+const analyticsRouter = require('./routes/analyticsRoutes');
+const apiIntegrationsRouter = require('./routes/apiIntegrationsRoutes');
+const collaborationRouter = require('./routes/collaborationRoutes');
+const discussionRouter = require('./routes/discussionRoutes');
+const docsRouter = require('./routes/docsRoutes');
+const eventRouter = require('./routes/eventRoutes');
+const feedbackRouter = require('./routes/feedbackRoutes');
+const searchRouter = require('./routes/searchRoutes');
+const socialRouter = require('./routes/socialRoutes');
+const trainingRouter = require('./routes/trainingRoutes');
+const commentRouter = require('./routes/commentsRoutes');
 
 const app = express();
 
@@ -27,34 +28,36 @@ if (process.env.NODE_ENV === 'development') {
 app.use(bodyParser.json());
 
 // User Authentication and Authorization
-app.use('/api/v1/users', userRoute);
+app.use('/api/v1/users', userRouter);
 // User reviews
-app.use('/api/v1/review', reviewRoute);
+app.use('/api/v1/review', reviewRouter);
 // User comments
-app.use('/api/v1/comment', commentRoute);
+app.use('/api/v1/comment', commentRouter);
 // Bug Reporting and Tracking
-app.use('/api/v1/bugs', bugHandlerRoute);
+app.use('/api/v1/bugs', bugReportRouter);
+// Bug Fixing
+app.use('/api/v1/bug_fixes', bugFixesRouter);
 // Bugathon Events
-app.use('/api/v1/events', eventRoute);
+app.use('/api/v1/events', eventRouter);
 // Community Collaboration
-app.use('/api/v1/discussions', discussionRoute);
+app.use('/api/v1/discussions', discussionRouter);
 // API Integration
-app.use('/api/v1/integrations', apiIntegrationsRoute);
+app.use('/api/v1/integrations', apiIntegrationsRouter);
 // Search and Filters
-app.use('/api/v1/search/bugs', searchRoute);
+app.use('/api/v1/search/bugs', searchRouter);
 // Analytics and Reporting
-app.use('/api/v1/analytics/bugs', analyticsRoute);
+app.use('/api/v1/analytics/bugs', analyticsRouter);
 // Documentation and Resources
-app.use('/api/v1/docs', docsRoute);
-app.use('/api/v1/resources', docsRoute);
+app.use('/api/v1/docs', docsRouter);
+app.use('/api/v1/resources', docsRouter);
 // Feedback Mechanism
-app.use('/api/v1/feedback', feedbackRoute);
+app.use('/api/v1/feedback', feedbackRouter);
 // Social Media Integration
-app.use('/api/v1/social/share', socialRoute);
+app.use('/api/v1/social/share', socialRouter);
 // Training and Workshops
-app.use('/api/v1/training', trainingRoute);
+app.use('/api/v1/training', trainingRouter);
 // Collaborative Tools Integration
-app.use('/api/v1/collaboration/slack', collaborationRoute);
+app.use('/api/v1/collaboration/slack', collaborationRouter);
 
 // Real-time Notifications:
 //WebSocket integration for real-time notifications on bug updates.

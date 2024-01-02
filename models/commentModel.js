@@ -30,6 +30,23 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
+commentSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'user',
+    select: 'username profile'
+  })
+    .populate({
+      path: 'post',
+      select: 'user solution status'
+    })
+    .populate({
+      path: 'parentComment',
+      select: 'user content'
+    });
+
+  next();
+});
+
 const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;

@@ -77,6 +77,18 @@ bugReportSchema.virtual('userAttempts', {
   justOne: false
 });
 
+bugReportSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'user',
+    select: 'username profile'
+  }).populate({
+    path: 'assignedTo',
+    select: 'username profile'
+  });
+
+  next();
+});
+
 const BugReport = mongoose.model('BugReport', bugReportSchema);
 
 module.exports = BugReport;

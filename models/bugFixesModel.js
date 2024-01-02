@@ -42,7 +42,7 @@ const userAttemptSchema = new mongoose.Schema(
 userAttemptSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
-  foreignField: 'product',
+  foreignField: 'post',
   justOne: false
 });
 

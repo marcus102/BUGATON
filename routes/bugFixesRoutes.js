@@ -1,30 +1,18 @@
 const express = require('express');
-const bugReportController = require('../controllers/bugReportController');
 const bugFixesController = require('../controllers/bugFixesController');
 const authenticatioController = require('../controllers/authenticatioController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.use(authenticatioController.protect);
 
 router
   .route('/')
-  .get(bugReportController.getAllBugs)
-  .post(bugReportController.createBug);
-
-router
-  .route('/:id')
-  .get(bugReportController.getBug)
-  .patch(bugReportController.updateBug)
-  .delete(bugReportController.deleteBug);
-
-router
-  .route('/:id/bug_fix')
   .get(bugFixesController.getALLBugFixes)
   .post(bugFixesController.createBugFix);
 
 router
-  .route('/:id/bug_fix/:bug_fix_id')
+  .route('/:id')
   .get(bugFixesController.getBugFix)
   .patch(bugFixesController.updateBugFix)
   .delete(bugFixesController.deleteBugFix);
