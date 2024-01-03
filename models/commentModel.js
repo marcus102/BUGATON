@@ -2,22 +2,26 @@ const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema(
   {
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // Reference to the User model
+    comment: {
+      type: String,
       required: true
-    },
-    post: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserAttempt'
     },
     parentComment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Comment'
     },
-    content: {
-      type: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
       required: true
+    },
+    bugFix: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserAttempt'
+    },
+    bug: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'BugReport'
     },
     createdAt: {
       type: Date,
@@ -30,18 +34,30 @@ const commentSchema = new mongoose.Schema(
   }
 );
 
+commentSchema.post('save', function(doc, next) {
+  if (!this.parentComment) {
+    this.parentComment = this._id;
+  }
+
+  next();
+});
+
 commentSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',
     select: 'username profile'
   })
     .populate({
-      path: 'post',
+      path: 'bug',
+      select: 'title description'
+    })
+    .populate({
+      path: 'bugFix',
       select: 'user solution status'
     })
     .populate({
       path: 'parentComment',
-      select: 'user content'
+      select: 'comment'
     });
 
   next();

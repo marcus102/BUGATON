@@ -1,18 +1,19 @@
 const express = require('express');
 const bugReportController = require('../controllers/bugReportController');
-// const bugFixesRouter = require('./../routes/bugFixesRoutes');
+const commentsRouter = require('./../routes/commentsRoutes');
 const authenticatioController = require('../controllers/authenticatioController');
 const bugFixesController = require('../controllers/bugFixesController');
 
 const router = express.Router();
 
-// router.use('/:bug_id/bug_fixes', bugFixesRouter);
+router.use('/:bug_id/comments', commentsRouter);
+router.use('/:bug_id/bug_fixes/:bug_fixes_id/comments', commentsRouter);
 
 router.use(authenticatioController.protect);
 router
   .route('/')
   .get(bugReportController.getAllBugs)
-  .post(bugReportController.setBugUserIds, bugReportController.createBug);
+  .post(bugReportController.setRequiredIds, bugReportController.createBug);
 
 router
   .route('/:id')
@@ -23,7 +24,7 @@ router
 router
   .route('/:bug_id/bug_fixes')
   .get(bugFixesController.getALLBugFixes)
-  .post(bugFixesController.setBugUserIds, bugFixesController.createBugFix);
+  .post(bugFixesController.setRequiredIds, bugFixesController.createBugFix);
 
 router
   .route('/:bug_id/bug_fixes/:id')

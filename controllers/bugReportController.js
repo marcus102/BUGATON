@@ -3,7 +3,7 @@ const BugReport = require('./../models/bugReportModel');
 // const appError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
-exports.setBugUserIds = (req, res, next) => {
+exports.setRequiredIds = (req, res, next) => {
   if (!req.body.user) req.body.user = req.user.id;
   next();
 };

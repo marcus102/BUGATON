@@ -1,8 +1,20 @@
 const express = require('express');
-const commentsController = require('../controllers/commentsControllers');
+const commentsController = require('./../controllers/commentsControllers');
+const authenticatioController = require('./../controllers/authenticatioController');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.get('/', commentsController.getComment);
+router.use(authenticatioController.protect);
+
+router
+  .route('/')
+  .get(commentsController.getAllComments)
+  .post(commentsController.setRequiredIds, commentsController.createComment);
+router
+  .route('/:id')
+  .post(commentsController.setRequiredIds, commentsController.createComment)
+  .get(commentsController.setRequiredIds, commentsController.getComment)
+  .patch(commentsController.updateComment)
+  .delete(commentsController.deleteComment);
 
 module.exports = router;

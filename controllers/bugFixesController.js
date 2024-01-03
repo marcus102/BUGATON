@@ -3,7 +3,7 @@ const BugFixes = require('./../models/bugFixesModel');
 const factory = require('./handlerFactory');
 // const catchAsync = require('../utils/catchAsync');
 
-exports.setBugUserIds = (req, res, next) => {
+exports.setRequiredIds = (req, res, next) => {
   if (!req.body.user) req.body.user = req.user.id;
   if (!req.body.bugReport) req.body.bugReport = req.params.bug_id;
   next();
