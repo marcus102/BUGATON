@@ -1,8 +1,12 @@
-// const appError = require('../utils/appError');
 const BugReport = require('./../models/bugReportModel');
-const catchAsync = require('../utils/catchAsync');
-const appError = require('./../utils/appError');
+// const catchAsync = require('../utils/catchAsync');
+// const appError = require('./../utils/appError');
 const factory = require('./handlerFactory');
+
+exports.setBugUserIds = (req, res, next) => {
+  if (!req.body.user) req.body.user = req.user.id;
+  next();
+};
 
 exports.createBug = factory.createOne(BugReport);
 exports.getAllBugs = factory.getAll(BugReport);

@@ -3,8 +3,8 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const globalErrorHandler = require('./controllers/errorsController');
 const appError = require('./utils/appError');
-const bugReportRouter = require('./routes/bugReportRoutes');
-const bugFixesRouter = require('./routes/bugFixesRoutes');
+const bugHandlerRouter = require('./routes/bugHandlerRoutes');
+// const bugFixesRouter = require('./routes/bugFixesRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewsRoutes');
 const analyticsRouter = require('./routes/analyticsRoutes');
@@ -34,9 +34,9 @@ app.use('/api/v1/review', reviewRouter);
 // User comments
 app.use('/api/v1/comment', commentRouter);
 // Bug Reporting and Tracking
-app.use('/api/v1/bugs', bugReportRouter);
+app.use('/api/v1/bugs', bugHandlerRouter);
 // Bug Fixing
-app.use('/api/v1/bug_fixes', bugFixesRouter);
+// app.use('/api/v1/bug_fixes', bugFixesRouter);
 // Bugathon Events
 app.use('/api/v1/events', eventRouter);
 // Community Collaboration

@@ -2,25 +2,27 @@ const mongoose = require('mongoose');
 
 const userAttemptSchema = new mongoose.Schema(
   {
-    bugReport: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'BugReport',
-      required: [true, 'The bug origin must be defined!']
-    },
     solution: {
       type: String,
       required: [true, 'Solution is required']
     },
     testingSteps: {
-      type: String
+      type: String,
+      required: true
     },
     testingResults: {
-      type: String
+      type: String,
+      required: true
     },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
       required: [true, 'Bug solution must have a user']
+    },
+    bugReport: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'BugReport',
+      required: [true, 'The bug origin must be defined!']
     },
     createdAt: {
       type: Date,
@@ -39,18 +41,28 @@ const userAttemptSchema = new mongoose.Schema(
   }
 );
 
+userAttemptSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'user',
+    select: 'username profile'
+  }).populate({
+    path: 'bugReport',
+    select: 'title description'
+  });
+
+  next();
+});
+
 userAttemptSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
-  foreignField: 'post',
-  justOne: false
+  foreignField: 'post'
 });
 
 userAttemptSchema.virtual('comments', {
   ref: 'Comment',
   localField: '_id',
-  foreignField: 'post',
-  justOne: false
+  foreignField: 'post'
 });
 
 const UserAttempt = mongoose.model('UserAttempt', userAttemptSchema);

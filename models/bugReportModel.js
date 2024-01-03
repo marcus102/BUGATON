@@ -24,13 +24,44 @@ const bugReportSchema = new mongoose.Schema(
       required: true
     },
     browser: {
-      type: String
+      type: String,
+      enum: [
+        'Chrome',
+        'Firefox',
+        'Safari',
+        'Edge',
+        'Internet Explorer',
+        'Opera',
+        'Brave',
+        'Other'
+      ],
+      default: 'Other'
     },
     operatingSystem: {
-      type: String
+      type: String,
+      enum: [
+        'Windows',
+        'macOS',
+        'Linux',
+        'iOS',
+        'Android',
+        'Windows Phone',
+        'Other'
+      ],
+      default: 'Other'
     },
     device: {
-      type: String
+      type: String,
+      enum: [
+        'Desktop',
+        'Laptop',
+        'Tablet',
+        'Mobile',
+        'Smartphone',
+        'Smartwatch',
+        'Other'
+      ],
+      default: 'Other'
     },
     severity: {
       type: String,
@@ -43,12 +74,12 @@ const bugReportSchema = new mongoose.Schema(
       default: 'new'
     },
     images: {
-      type: [String]
+      type: String
     },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      required: [true, 'A bug report must belong to a user!']
+      required: [true, 'A bug report must belong to a user']
     },
     assignedTo: {
       type: mongoose.Schema.ObjectId,
@@ -57,7 +88,7 @@ const bugReportSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now
+      default: Date.now()
     },
     updatedAt: {
       type: Date
@@ -73,8 +104,7 @@ const bugReportSchema = new mongoose.Schema(
 bugReportSchema.virtual('userAttempts', {
   ref: 'UserAttempt',
   localField: '_id',
-  foreignField: 'bugReport',
-  justOne: false
+  foreignField: 'bugReport'
 });
 
 bugReportSchema.pre(/^find/, function(next) {
@@ -85,6 +115,24 @@ bugReportSchema.pre(/^find/, function(next) {
     path: 'assignedTo',
     select: 'username profile'
   });
+
+  next();
+});
+
+bugReportSchema.pre('save', function(next) {
+  const fieldsToCheck = [
+    'title',
+    'description',
+    'stepsToReproduce',
+    'expectedBehavior',
+    'actualBehavior',
+    'images'
+    // Add other fields as needed
+  ];
+
+  if (fieldsToCheck.some(field => this.isModified(field))) {
+    this.updatedAt = Date.now();
+  }
 
   next();
 });
