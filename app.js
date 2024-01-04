@@ -18,6 +18,7 @@ const searchRouter = require('./routes/searchRoutes');
 const socialRouter = require('./routes/socialRoutes');
 const trainingRouter = require('./routes/trainingRoutes');
 const commentRouter = require('./routes/commentsRoutes');
+const imageRouter = require('./routes/imagesRoutes');
 
 const app = express();
 
@@ -29,10 +30,12 @@ app.use(bodyParser.json());
 
 // User Authentication and Authorization
 app.use('/api/v1/users', userRouter);
+// User Authentication and Authorization
+app.use('/api/v1/images', imageRouter);
 // User reviews
-app.use('/api/v1/review', reviewRouter);
+app.use('/api/v1/reviews', reviewRouter);
 // User comments
-app.use('/api/v1/comment', commentRouter);
+app.use('/api/v1/comments', commentRouter);
 // Bug Reporting and Tracking
 app.use('/api/v1/bugs', bugHandlerRouter);
 // Bug Fixing

@@ -4,6 +4,17 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
+exports.setRequiredIds = (req, res, next) => {
+  const setIfUndefined = (field, value) => {
+    if (!req.body[field]) req.body[field] = value;
+  };
+  setIfUndefined('user', req.user.id);
+  setIfUndefined('bug', req.params.bug_id);
+  setIfUndefined('bugFix', req.params.bug_fixes_id);
+
+  next();
+};
+
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach(el => {
@@ -23,7 +34,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
 exports.getAllUsers = factory.getAll(User);
 exports.deleteUser = factory.deleteOne(User);
 exports.updateUser = factory.updateOne(User);
-exports.getUser = factory.getOne(User);
+exports.getUser = factory.getOne(User, { path: 'image' });
 
 exports.getMe = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;

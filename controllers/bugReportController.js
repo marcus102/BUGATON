@@ -10,6 +10,9 @@ exports.setRequiredIds = (req, res, next) => {
 
 exports.createBug = factory.createOne(BugReport);
 exports.getAllBugs = factory.getAll(BugReport);
-exports.getBug = factory.getOne(BugReport, { path: 'userAttempts' });
+exports.getBug = factory.getOne(BugReport, [
+  { path: 'userAttempts' },
+  { path: 'image' }
+]);
 exports.updateBug = factory.updateOne(BugReport);
 exports.deleteBug = factory.deleteOne(BugReport);

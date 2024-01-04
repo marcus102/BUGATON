@@ -17,10 +17,9 @@ const reviewSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
-    post: {
+    bugFix: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserAttempt',
-      required: true
+      ref: 'UserAttempt'
     },
     createdAt: {
       type: Date,
@@ -33,12 +32,18 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
+reviewSchema.virtual('image', {
+  ref: 'Image',
+  localField: '_id',
+  foreignField: 'review'
+});
+
 reviewSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',
     select: 'username profile'
   }).populate({
-    path: 'post',
+    path: 'bugFix',
     select: 'solution user status'
   });
 

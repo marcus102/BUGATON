@@ -1,31 +1,32 @@
 const express = require('express');
-const reviewController = require('./../controllers/reviewsController');
+const reusableCodeControllerjs = require('./../controllers/reusableCodeControllerjs');
 const authenticatioController = require('./../controllers/authenticatioController');
 const imageRouter = require('./../routes/imagesRoutes');
 
 const router = express.Router({ mergeParams: true });
-router.use('/:review_id', imageRouter);
+
+router.use('/:reusable_code_id', imageRouter);
 
 router.use(authenticatioController.protect);
 
 router
   .route('/')
-  .get(reviewController.getAllReviews)
+  .get(reusableCodeControllerjs.getAllReviews)
   .post(
     authenticatioController.restrictTo('user'),
-    reviewController.setRequiredIds,
-    reviewController.createReview
+    reusableCodeControllerjs.setRequiredIds,
+    reusableCodeControllerjs.createReview
   );
 router
   .route('/:id')
-  .get(reviewController.getReview)
+  .get(reusableCodeControllerjs.getReview)
   .patch(
     authenticatioController.restrictTo('user', 'admin'),
-    reviewController.updateReview
+    reusableCodeControllerjs.updateReview
   )
   .delete(
     authenticatioController.restrictTo('user', 'admin'),
-    reviewController.deleteReview
+    reusableCodeControllerjs.deleteReview
   );
 
 module.exports = router;

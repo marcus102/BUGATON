@@ -41,6 +41,12 @@ const userAttemptSchema = new mongoose.Schema(
   }
 );
 
+userAttemptSchema.virtual('image', {
+  ref: 'Image',
+  localField: '_id',
+  foreignField: 'bugFix'
+});
+
 userAttemptSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',

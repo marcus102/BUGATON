@@ -33,10 +33,6 @@ const userSchema = new mongoose.Schema(
         message: 'Please provide a valid email!'
       }
     },
-    profile: {
-      type: String,
-      default: null
-    },
     role: {
       type: String,
       enum: [
@@ -108,6 +104,12 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
+
+userSchema.virtual('image', {
+  ref: 'Image',
+  localField: '_id',
+  foreignField: 'user'
+});
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();

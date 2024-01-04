@@ -73,9 +73,6 @@ const bugReportSchema = new mongoose.Schema(
       enum: ['new', 'assigned', 'in-progress', 'resolved', 'closed'],
       default: 'new'
     },
-    images: {
-      type: String
-    },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
@@ -103,6 +100,12 @@ const bugReportSchema = new mongoose.Schema(
 
 bugReportSchema.virtual('userAttempts', {
   ref: 'UserAttempt',
+  localField: '_id',
+  foreignField: 'bugReport'
+});
+
+bugReportSchema.virtual('image', {
+  ref: 'Image',
   localField: '_id',
   foreignField: 'bugReport'
 });

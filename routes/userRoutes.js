@@ -1,8 +1,11 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
 const authController = require('../controllers/authenticatioController');
+const imageRouter = require('./../routes/imagesRoutes');
 
 const router = express.Router();
+
+router.use('/profile', imageRouter);
 
 router.post('/signup', authController.signUp);
 router.post('/login', authController.logIn);

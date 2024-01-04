@@ -42,6 +42,12 @@ commentSchema.post('save', function(doc, next) {
   next();
 });
 
+commentSchema.virtual('childComments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'parentComment'
+});
+
 commentSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',

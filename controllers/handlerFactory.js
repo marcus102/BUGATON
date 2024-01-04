@@ -48,7 +48,13 @@ exports.getOne = (Model, populateOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
     if (populateOptions) {
-      query = query.populate(populateOptions);
+      if (Array.isArray(populateOptions)) {
+        populateOptions.forEach(option => {
+          query = query.populate(option);
+        });
+      } else {
+        query = query.populate(populateOptions);
+      }
     }
 
     const doc = await query;

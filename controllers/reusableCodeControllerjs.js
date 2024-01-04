@@ -1,4 +1,4 @@
-const Review = require('./../models/reviewModel');
+const ReusableCode = require('./../models/reusableCodeModel');
 // const APIFeatures = require('./../utils/apiFeatures');
 // const catchAsync = require('./../utils/catchAsync');
 // const AppError = require('./../utils/appError');
@@ -14,8 +14,8 @@ exports.setRequiredIds = (req, res, next) => {
   next();
 };
 
-exports.getAllReviews = factory.getAll(Review);
-exports.createReview = factory.createOne(Review);
-exports.getReview = factory.getOne(Review, { path: 'image' });
-exports.deleteReview = factory.deleteOne(Review);
-exports.updateReview = factory.updateOne(Review);
+exports.getAllReusableCodes = factory.getAll(ReusableCode);
+exports.createReusableCode = factory.createOne(ReusableCode);
+exports.getReusableCode = factory.getOne(ReusableCode, { path: 'image' });
+exports.deleteReusableCode = factory.deleteOne(ReusableCode);
+exports.updateReusableCode = factory.updateOne(ReusableCode);
