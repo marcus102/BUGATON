@@ -1,7 +1,4 @@
 const ReusableCode = require('./../models/reusableCodeModel');
-// const APIFeatures = require('./../utils/apiFeatures');
-// const catchAsync = require('./../utils/catchAsync');
-// const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
 exports.setRequiredIds = (req, res, next) => {
@@ -9,7 +6,6 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
-  setIfUndefined('bugFix', req.params.bug_fixes_id);
 
   next();
 };

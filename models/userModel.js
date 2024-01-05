@@ -50,6 +50,10 @@ const userSchema = new mongoose.Schema(
       ],
       default: 'user'
     },
+    zoneOfInterests: {
+      type: [String],
+      default: []
+    },
     website: {
       type: String,
       default: null

@@ -123,10 +123,6 @@ const imageSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'UserAttempt'
     },
-    review: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Review'
-    },
     createdAt: {
       type: Date,
       default: Date.now

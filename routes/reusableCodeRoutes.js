@@ -1,32 +1,25 @@
 const express = require('express');
-const reusableCodeControllerjs = require('./../controllers/reusableCodeControllerjs');
+const reusableCodeController = require('./../controllers/reusableCodeControllerjs');
 const authenticatioController = require('./../controllers/authenticatioController');
 const imageRouter = require('./../routes/imagesRoutes');
 
 const router = express.Router({ mergeParams: true });
 
-router.use('/:reusable_code_id', imageRouter);
+router.use('/:reusable_code_id/image', imageRouter);
 
 router.use(authenticatioController.protect);
 
 router
   .route('/')
-  .get(reusableCodeControllerjs.getAllReviews)
+  .get(reusableCodeController.getAllReusableCodes)
   .post(
-    authenticatioController.restrictTo('user'),
-    reusableCodeControllerjs.setRequiredIds,
-    reusableCodeControllerjs.createReview
+    reusableCodeController.setRequiredIds,
+    reusableCodeController.createReusableCode
   );
 router
   .route('/:id')
-  .get(reusableCodeControllerjs.getReview)
-  .patch(
-    authenticatioController.restrictTo('user', 'admin'),
-    reusableCodeControllerjs.updateReview
-  )
-  .delete(
-    authenticatioController.restrictTo('user', 'admin'),
-    reusableCodeControllerjs.deleteReview
-  );
+  .get(reusableCodeController.getReusableCode)
+  .patch(reusableCodeController.updateReusableCode)
+  .delete(reusableCodeController.deleteReusableCode);
 
 module.exports = router;

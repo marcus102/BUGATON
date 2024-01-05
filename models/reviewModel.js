@@ -32,16 +32,10 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.virtual('image', {
-  ref: 'Image',
-  localField: '_id',
-  foreignField: 'review'
-});
-
 reviewSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',
-    select: 'username profile'
+    select: 'username image'
   }).populate({
     path: 'bugFix',
     select: 'solution user status'

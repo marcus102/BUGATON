@@ -6,11 +6,11 @@ const userAttemptSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Solution is required']
     },
-    testingSteps: {
+    description: {
       type: String,
       required: true
     },
-    testingResults: {
+    result: {
       type: String,
       required: true
     },
@@ -24,14 +24,42 @@ const userAttemptSchema = new mongoose.Schema(
       ref: 'BugReport',
       required: [true, 'The bug origin must be defined!']
     },
-    createdAt: {
-      type: Date,
-      default: Date.now
+    viewCount: {
+      type: Number,
+      default: 0
     },
+    likeCount: {
+      type: Number,
+      default: 0
+    },
+    downloadCount: {
+      type: Number,
+      default: 0
+    },
+    shareCount: {
+      type: Number,
+      default: 0
+    },
+    frameworkVersions: [
+      {
+        name: String,
+        version: String
+      }
+    ],
+    codeContributors: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+      }
+    ],
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected'],
       default: 'pending'
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now
     }
   },
 

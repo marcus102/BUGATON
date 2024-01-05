@@ -80,8 +80,29 @@ const bugReportSchema = new mongoose.Schema(
     },
     assignedTo: {
       type: mongoose.Schema.ObjectId,
-      ref: 'User',
-      default: null
+      ref: 'User'
+    },
+    viewCount: {
+      type: Number,
+      default: 0
+    },
+    totalAttempts: {
+      type: Number,
+      default: 0
+    },
+    shareCount: {
+      type: Number,
+      default: 0
+    },
+    codeContributors: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User'
+      }
+    ],
+    zoneOfInterests: {
+      type: [String],
+      default: []
     },
     createdAt: {
       type: Date,

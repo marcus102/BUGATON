@@ -19,6 +19,7 @@ const socialRouter = require('./routes/socialRoutes');
 const trainingRouter = require('./routes/trainingRoutes');
 const commentRouter = require('./routes/commentsRoutes');
 const imageRouter = require('./routes/imagesRoutes');
+const reusableCodeRouter = require('./routes/reusableCodeRoutes');
 
 const app = express();
 
@@ -28,42 +29,25 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(bodyParser.json());
 
-// User Authentication and Authorization
-app.use('/api/v1/users', userRouter);
-// User Authentication and Authorization
-app.use('/api/v1/images', imageRouter);
-// User reviews
-app.use('/api/v1/reviews', reviewRouter);
-// User comments
-app.use('/api/v1/comments', commentRouter);
-// Bug Reporting and Tracking
-app.use('/api/v1/bugs', bugHandlerRouter);
-// Bug Fixing
-// app.use('/api/v1/bug_fixes', bugFixesRouter);
-// Bugathon Events
-app.use('/api/v1/events', eventRouter);
-// Community Collaboration
-app.use('/api/v1/discussions', discussionRouter);
-// API Integration
-app.use('/api/v1/integrations', apiIntegrationsRouter);
-// Search and Filters
-app.use('/api/v1/search/bugs', searchRouter);
-// Analytics and Reporting
-app.use('/api/v1/analytics/bugs', analyticsRouter);
-// Documentation and Resources
-app.use('/api/v1/docs', docsRouter);
-app.use('/api/v1/resources', docsRouter);
-// Feedback Mechanism
-app.use('/api/v1/feedback', feedbackRouter);
-// Social Media Integration
-app.use('/api/v1/social/share', socialRouter);
-// Training and Workshops
-app.use('/api/v1/training', trainingRouter);
-// Collaborative Tools Integration
-app.use('/api/v1/collaboration/slack', collaborationRouter);
+const mainUrl = '/api/v1';
 
-// Real-time Notifications:
-//WebSocket integration for real-time notifications on bug updates.
+app.use(`${mainUrl}/users`, userRouter);
+app.use(`${mainUrl}/images`, imageRouter);
+app.use(`${mainUrl}/reviews`, reviewRouter);
+app.use(`${mainUrl}/comments`, commentRouter);
+app.use(`${mainUrl}/bugs`, bugHandlerRouter);
+app.use(`${mainUrl}/reusable_codes`, reusableCodeRouter);
+app.use(`${mainUrl}/events`, eventRouter);
+app.use(`${mainUrl}/discussions`, discussionRouter);
+app.use(`${mainUrl}/integrations`, apiIntegrationsRouter);
+app.use(`${mainUrl}/search/bugs`, searchRouter);
+app.use(`${mainUrl}/analytics/bugs`, analyticsRouter);
+app.use(`${mainUrl}/docs`, docsRouter);
+app.use(`${mainUrl}/resources`, docsRouter);
+app.use(`${mainUrl}/feedback`, feedbackRouter);
+app.use(`${mainUrl}/social/share`, socialRouter);
+app.use(`${mainUrl}/training`, trainingRouter);
+app.use(`${mainUrl}/collaboration/slack`, collaborationRouter);
 
 app.all('*', (req, res, next) => {
   next(

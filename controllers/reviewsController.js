@@ -16,6 +16,6 @@ exports.setRequiredIds = (req, res, next) => {
 
 exports.getAllReviews = factory.getAll(Review);
 exports.createReview = factory.createOne(Review);
-exports.getReview = factory.getOne(Review, { path: 'image' });
+exports.getReview = factory.getOne(Review);
 exports.deleteReview = factory.deleteOne(Review);
 exports.updateReview = factory.updateOne(Review);

@@ -23,6 +23,10 @@ const commentSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'BugReport'
     },
+    reusableCode: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'ReusableCode'
+    },
     createdAt: {
       type: Date,
       default: Date.now
@@ -64,6 +68,10 @@ commentSchema.pre(/^find/, function(next) {
     .populate({
       path: 'parentComment',
       select: 'comment'
+    })
+    .populate({
+      path: 'reusableCode',
+      select: 'title description'
     });
 
   next();

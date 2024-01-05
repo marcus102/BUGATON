@@ -11,6 +11,9 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
+  setIfUndefined('bugReport', req.params.bug_id);
+  setIfUndefined('reusableCode', req.params.reusable_code_id);
+  setIfUndefined('bugFix', req.params.bug_fixes_id);
 
   next();
 };
@@ -38,15 +41,18 @@ exports.createImage = catchAsync(async (req, res, next) => {
   }
   // Create a new Image document
   const newImage = await Image.create({
-    user: req.body.user,
-    caption: req.body.caption,
     imageUrl: path.join(__dirname, '..', 'assets', 'images', req.file.filename),
+    caption: req.body.caption,
     tags: req.body.tags,
     likes: req.body.likes,
     privacy: req.body.privacy,
     size: req.file.size,
     fileFormat: req.file.mimetype,
-    downloads: req.body.downloads
+    downloads: req.body.downloads,
+    user: req.body.user,
+    bugReport: req.body.bugReport,
+    reusableCode: req.body.reusableCode,
+    bugFix: req.body.bugFix
   });
 
   res.status(201).json({
@@ -115,14 +121,12 @@ exports.deleteImage = catchAsync(async (req, res, next) => {
     if (err) throw err;
   });
 
-  factory.deleteOne(Image);
+  await Image.findByIdAndDelete(req.params.id);
 
-  //   await Image.findByIdAndDelete(req.params.id);
-
-  //   res.status(204).json({
-  //     status: 'success',
-  //     data: null
-  //   });
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
 });
 
 exports.getAllImages = factory.getAll(Image);
