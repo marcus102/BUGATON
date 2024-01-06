@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const globalErrorHandler = require('./controllers/errorsController');
 const appError = require('./utils/appError');
 const bugHandlerRouter = require('./routes/bugHandlerRoutes');
-// const bugFixesRouter = require('./routes/bugFixesRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewsRoutes');
 const analyticsRouter = require('./routes/analyticsRoutes');
@@ -29,25 +28,25 @@ if (process.env.NODE_ENV === 'development') {
 
 app.use(bodyParser.json());
 
-const mainUrl = '/api/v1';
+const rootUrl = '/api/v1';
 
-app.use(`${mainUrl}/users`, userRouter);
-app.use(`${mainUrl}/images`, imageRouter);
-app.use(`${mainUrl}/reviews`, reviewRouter);
-app.use(`${mainUrl}/comments`, commentRouter);
-app.use(`${mainUrl}/bugs`, bugHandlerRouter);
-app.use(`${mainUrl}/reusable_codes`, reusableCodeRouter);
-app.use(`${mainUrl}/feedbacks`, feedbackRouter);
-app.use(`${mainUrl}/events`, eventRouter);
-app.use(`${mainUrl}/discussions`, discussionRouter);
-app.use(`${mainUrl}/integrations`, apiIntegrationsRouter);
-app.use(`${mainUrl}/search/bugs`, searchRouter);
-app.use(`${mainUrl}/analytics/bugs`, analyticsRouter);
-app.use(`${mainUrl}/docs`, docsRouter);
-app.use(`${mainUrl}/resources`, docsRouter);
-app.use(`${mainUrl}/social/share`, socialRouter);
-app.use(`${mainUrl}/training`, trainingRouter);
-app.use(`${mainUrl}/collaboration/slack`, collaborationRouter);
+app.use(`${rootUrl}/users`, userRouter);
+app.use(`${rootUrl}/images`, imageRouter);
+app.use(`${rootUrl}/reviews`, reviewRouter);
+app.use(`${rootUrl}/comments`, commentRouter);
+app.use(`${rootUrl}/bugs`, bugHandlerRouter);
+app.use(`${rootUrl}/reusable_codes`, reusableCodeRouter);
+app.use(`${rootUrl}/feedbacks`, feedbackRouter);
+app.use(`${rootUrl}/events`, eventRouter);
+app.use(`${rootUrl}/discussions`, discussionRouter);
+app.use(`${rootUrl}/integrations`, apiIntegrationsRouter);
+app.use(`${rootUrl}/search/bugs`, searchRouter);
+app.use(`${rootUrl}/analytics/bugs`, analyticsRouter);
+app.use(`${rootUrl}/docs`, docsRouter);
+app.use(`${rootUrl}/resources`, docsRouter);
+app.use(`${rootUrl}/social/share`, socialRouter);
+app.use(`${rootUrl}/training`, trainingRouter);
+app.use(`${rootUrl}/collaboration/slack`, collaborationRouter);
 
 app.all('*', (req, res, next) => {
   next(
