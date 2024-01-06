@@ -27,7 +27,7 @@ const filterObj = (obj, ...allowedFields) => {
 exports.createUser = catchAsync(async (req, res, next) => {
   res.status(500).json({
     status: 'error',
-    message: 'cannot create a user with this url! Please Sigup'
+    message: 'Cannot create a user with this url! Please Sigup'
   });
 });
 

@@ -74,10 +74,10 @@ exports.getOne = (Model, populateOptions) =>
 exports.getAll = Model =>
   catchAsync(async (req, res, next) => {
     // for nested get reviews
-    let filter = {};
-    if (req.params.id) {
-      filter = { tour: req.params.id };
-    }
+    // let filter = {};
+    // if (req.params.id) {
+    //   filter = { tour: req.params.id };
+    // }
     const features = new APIFeatures(Model.find(), req.query)
       .filter()
       .sort()

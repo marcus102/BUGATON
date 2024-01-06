@@ -71,7 +71,10 @@ const imageSchema = new mongoose.Schema(
       ],
       default: 'Technology'
     },
-    description: String,
+    description: {
+      type: String,
+      default: null
+    },
     likes: {
       type: Number,
       default: 0
@@ -123,10 +126,17 @@ const imageSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'UserAttempt'
     },
-    username: String,
+    username: {
+      type: String,
+      default: null
+    },
     createdAt: {
       type: Date,
       default: Date.now
+    },
+    updatedAt: {
+      type: Date,
+      default: null
     }
   },
   {

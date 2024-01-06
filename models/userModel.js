@@ -16,11 +16,28 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: [true, 'User must have a username!'],
+      lowercase: true,
       unique: [
         true,
         'Sorry, the username is already in use. Please choose another one!'
       ],
-      trim: true
+      trim: true,
+      validate: [
+        {
+          validator: function(value) {
+            // Check if the username starts with "@"
+            return value.startsWith('@');
+          },
+          message: 'Username must start with "@" symbol!'
+        },
+        {
+          validator: function(value) {
+            const atCount = (value.match(/@/g) || []).length;
+            return atCount === 1;
+          },
+          message: 'Username must contain only one "@" symbol!'
+        }
+      ]
     },
     email: {
       type: String,
@@ -31,6 +48,15 @@ const userSchema = new mongoose.Schema(
       validate: {
         validator: validator.isEmail,
         message: 'Please provide a valid email!'
+      }
+    },
+    phone: {
+      type: String,
+      validate: {
+        validator: function(value) {
+          return validator.isMobilePhone(value, 'any', { strictMode: false });
+        },
+        message: 'Please provide a valid phone number!'
       }
     },
     role: {
@@ -54,17 +80,20 @@ const userSchema = new mongoose.Schema(
       type: [String],
       default: []
     },
-    website: {
-      type: String,
-      default: null
-    },
+    links: [
+      {
+        type: String,
+        validate: {
+          validator: validator.isURL,
+          message: 'Please provide a valid URL!'
+        }
+      }
+    ],
     bio: {
-      type: String,
-      default: null
+      type: String
     },
     location: {
-      type: String,
-      default: null
+      type: String
     },
     password: {
       type: String,

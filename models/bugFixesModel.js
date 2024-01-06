@@ -8,11 +8,11 @@ const userAttemptSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true
+      default: null
     },
     result: {
       type: String,
-      required: true
+      required: [true, 'Result to the solution must be provided!']
     },
     user: {
       type: mongoose.Schema.ObjectId,
@@ -43,15 +43,21 @@ const userAttemptSchema = new mongoose.Schema(
     frameworkVersions: [
       {
         name: String,
-        version: String
+        version: String,
+        default: null
       }
     ],
-    codeContributors: [
+    contributors: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        default: null
       }
     ],
+    contributorsCount: {
+      type: Number,
+      default: 0
+    },
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected'],
@@ -59,7 +65,11 @@ const userAttemptSchema = new mongoose.Schema(
     },
     createdAt: {
       type: Date,
-      default: Date.now
+      default: Date.now()
+    },
+    updatedAt: {
+      type: Date,
+      default: null
     }
   },
 

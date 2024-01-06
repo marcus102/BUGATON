@@ -4,24 +4,29 @@ const bugReportSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
-      trim: true
+      required: [true, 'A title must be given the the bug!']
     },
     description: {
       type: String,
-      required: true
+      required: [true, 'Description is required for user undersdanding']
     },
     stepsToReproduce: {
       type: String,
-      required: true
+      required: [true, 'Please provide the steps that are leading to the bug!']
     },
     expectedBehavior: {
       type: String,
-      required: true
+      required: [
+        true,
+        'The expected behavior of the software is required! Please provide it'
+      ]
     },
     actualBehavior: {
       type: String,
-      required: true
+      required: [
+        true,
+        'Provide the actual behavior to help users understand more'
+      ]
     },
     browser: {
       type: String,
@@ -78,10 +83,13 @@ const bugReportSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'A bug report must belong to a user']
     },
-    assignedTo: {
-      type: mongoose.Schema.ObjectId,
-      ref: 'User'
-    },
+    assignedTo: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+        default: null
+      }
+    ],
     viewCount: {
       type: Number,
       default: 0
@@ -97,19 +105,23 @@ const bugReportSchema = new mongoose.Schema(
     codeContributors: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        default: null
       }
     ],
-    zoneOfInterests: {
-      type: [String],
-      default: []
-    },
+    zoneOfInterests: [
+      {
+        type: String,
+        default: null
+      }
+    ],
     createdAt: {
       type: Date,
       default: Date.now()
     },
     updatedAt: {
-      type: Date
+      type: Date,
+      default: null
     }
   },
 
