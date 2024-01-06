@@ -320,6 +320,42 @@ reusableCodeSchema.virtual('image', {
   foreignField: 'reusableCode'
 });
 
+reusableCodeSchema.pre('save', function(next) {
+  const fieldsToCheck = [
+    'title',
+    'description',
+    'codeSnippet',
+    'tags',
+    'language',
+    'codeType',
+    'license',
+    'documentationLink',
+    'testingInfo',
+    'versionControl',
+    'repositoryLink',
+    'frameworkVersions',
+    'usageStatistics',
+    'deploymentInfo',
+    'deploymentInfo',
+    'codeQualityMetrics',
+    'securityInfo',
+    'platformCompatibility',
+    'codeContributors',
+    'zoneOfInterests'
+  ];
+
+  const isFieldsUnmodified = !fieldsToCheck.some(field =>
+    this.isModified(field)
+  );
+
+  if (isFieldsUnmodified || this.isNew) {
+    return next();
+  }
+
+  this.updatedAt = Date.now();
+  next();
+});
+
 const ReusableCode = mongoose.model('ReusableCode', reusableCodeSchema);
 
 module.exports = ReusableCode;

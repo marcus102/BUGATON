@@ -54,10 +54,6 @@ const userAttemptSchema = new mongoose.Schema(
         default: []
       }
     ],
-    contributorsCount: {
-      type: Number,
-      default: 0
-    },
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected'],
@@ -78,6 +74,28 @@ const userAttemptSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
+
+userAttemptSchema.pre('save', function(next) {
+  const fieldsToCheck = [
+    'solution',
+    'description',
+    'result',
+    'frameworkVersions',
+    'contributors',
+    'status'
+  ];
+
+  const isFieldsUnmodified = !fieldsToCheck.some(field =>
+    this.isModified(field)
+  );
+
+  if (isFieldsUnmodified || this.isNew) {
+    return next();
+  }
+
+  this.updatedAt = Date.now();
+  next();
+});
 
 userAttemptSchema.virtual('image', {
   ref: 'Image',

@@ -81,6 +81,21 @@ commentSchema.pre(/^find/, function(next) {
   next();
 });
 
+commentSchema.pre('save', function(next) {
+  const fieldsToCheck = ['comment', 'parentComment'];
+
+  const isFieldsUnmodified = !fieldsToCheck.some(field =>
+    this.isModified(field)
+  );
+
+  if (isFieldsUnmodified || this.isNew) {
+    return next();
+  }
+
+  this.updatedAt = Date.now();
+  next();
+});
+
 const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;

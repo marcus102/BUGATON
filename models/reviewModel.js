@@ -45,6 +45,14 @@ reviewSchema.pre(/^find/, function(next) {
   next();
 });
 
+reviewSchema.pre('save', function(next) {
+  if (!(this.isModified('review') || this.isModified('rating')) || this.isNew)
+    return next();
+
+  this.updatedAt = Date.now();
+  next();
+});
+
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;

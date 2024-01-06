@@ -102,7 +102,7 @@ const bugReportSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    codeContributors: [
+    contributors: [
       {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
@@ -130,6 +130,36 @@ const bugReportSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
+
+bugReportSchema.pre('save', function(next) {
+  const fieldsToCheck = [
+    'title',
+    'description',
+    'stepsToReproduce',
+    'expectedBehavior',
+    'actualBehavior',
+    'browser',
+    'operatingSystem',
+    'device',
+    'severity',
+    'status',
+    'assignedTo',
+    'contributors',
+    'operatingSystem',
+    'zoneOfInterests'
+  ];
+
+  const isFieldsUnmodified = !fieldsToCheck.some(field =>
+    this.isModified(field)
+  );
+
+  if (isFieldsUnmodified || this.isNew) {
+    return next();
+  }
+
+  this.updatedAt = Date.now();
+  next();
+});
 
 bugReportSchema.virtual('userAttempts', {
   ref: 'UserAttempt',
