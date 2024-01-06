@@ -6,6 +6,13 @@ const router = express.Router({ mergeParams: true });
 
 router.use(authenticatioController.protect);
 
+router.post(
+  '/upload_image',
+  imagesController.uploadImage,
+  imagesController.setRequiredIds,
+  imagesController.addProfile
+);
+
 router
   .route('/')
   .get(imagesController.getAllImages)

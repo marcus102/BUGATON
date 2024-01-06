@@ -123,6 +123,7 @@ const imageSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'UserAttempt'
     },
+    username: String,
     createdAt: {
       type: Date,
       default: Date.now
