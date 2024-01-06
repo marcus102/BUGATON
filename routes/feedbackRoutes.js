@@ -9,20 +9,17 @@ router.use(authenticatioController.protect);
 router
   .route('/')
   .get(feedbackController.getAllFeedbacks)
-  .post(
-    authenticatioController.restrictTo('user'),
-    feedbackController.setRequiredIds,
-    feedbackController.createFeedback
-  );
+  .post(feedbackController.setRequiredIds, feedbackController.createFeedback);
+
 router
   .route('/:id')
   .get(feedbackController.getFeedback)
   .patch(
-    authenticatioController.restrictTo('user', 'admin'),
+    authenticatioController.restrictTo('admin'),
     feedbackController.updateFeedback
   )
   .delete(
-    authenticatioController.restrictTo('user', 'admin'),
+    authenticatioController.restrictTo('admin'),
     feedbackController.deleteFeedback
   );
 
