@@ -1,7 +1,9 @@
+const path = require('path');
+const fs = require('fs');
+const multer = require('multer');
 const User = require('./../models/userModel');
-// const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
-const AppError = require('../utils/appError');
+const appError = require('../utils/appError');
 const factory = require('./handlerFactory');
 
 exports.setRequiredIds = (req, res, next) => {
@@ -9,8 +11,7 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
-  setIfUndefined('bug', req.params.bug_id);
-  setIfUndefined('bugFix', req.params.bug_fixes_id);
+  setIfUndefined('profile', req.file.filename);
 
   next();
 };
@@ -23,6 +24,44 @@ const filterObj = (obj, ...allowedFields) => {
 
   return newObj;
 };
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './../BUGATON/assets/images');
+  },
+  filename: function(req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
+
+exports.uploadImage = upload.single('image');
+
+exports.deleteImage = catchAsync(async (req, res, next) => {
+  const imagePath = await User.findById(req.user.id);
+  if (!imagePath) {
+    return next(appError('Profile not found!', 404));
+  }
+
+  if (imagePath.profile === null || !imagePath.profile) {
+    return next();
+  }
+
+  const oldImagePath = path.join(
+    __dirname,
+    '..',
+    'assets',
+    'images',
+    path.basename(imagePath.profile)
+  );
+
+  await fs.unlink(oldImagePath, err => {
+    if (err) throw err;
+  });
+
+  next();
+});
 
 exports.createUser = catchAsync(async (req, res, next) => {
   res.status(500).json({
@@ -44,7 +83,7 @@ exports.getMe = catchAsync(async (req, res, next) => {
 exports.updateMe = catchAsync(async (req, res, next) => {
   // create error if user post password data
   if (req.body.password || req.body.passwordConfirm) {
-    return next(new AppError('This route is not for password update!', 400));
+    return next(appError('This route is not for password update!', 400));
   }
 
   const filteredBody = filterObj(
@@ -53,16 +92,24 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'lastName',
     'username',
     'profile',
+    'images',
     'email',
     'website',
     'bio',
     'location'
   );
+
+  filteredBody.profile = path.join(
+    __dirname,
+    '..',
+    'assets',
+    'images',
+    req.body.profile
+  );
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true
   });
-  // update user document
 
   res.status(200).json({
     status: 'success',

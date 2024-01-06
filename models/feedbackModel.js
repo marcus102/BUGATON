@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 
-const reviewSchema = new mongoose.Schema(
+const feedbackSchema = new mongoose.Schema(
   {
-    review: String,
+    feedback: {
+      type: String,
+      required: [false, 'Provide a feedback']
+    },
     rating: {
       type: Number,
       required: [true, 'Please provide a rating.'],
@@ -14,9 +17,16 @@ const reviewSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
-    bugFix: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserAttempt'
+    agreement: {
+      type: String,
+      enum: [
+        'strongly agree',
+        'agree',
+        'disagree',
+        'strongly disagree',
+        'neutral'
+      ],
+      default: 'neutral'
     },
     createdAt: {
       type: Date,
@@ -33,18 +43,15 @@ const reviewSchema = new mongoose.Schema(
   }
 );
 
-reviewSchema.pre(/^find/, function(next) {
+feedbackSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',
     select: 'username image'
-  }).populate({
-    path: 'bugFix',
-    select: 'solution user status'
   });
 
   next();
 });
 
-const Review = mongoose.model('Review', reviewSchema);
+const Feedback = mongoose.model('Feedback', feedbackSchema);
 
-module.exports = Review;
+module.exports = Feedback;

@@ -75,10 +75,6 @@ const imageSchema = new mongoose.Schema(
       type: String,
       default: null
     },
-    likes: {
-      type: Number,
-      default: 0
-    },
     privacy: {
       type: String,
       enum: ['public', 'private', 'shared'],
@@ -126,13 +122,9 @@ const imageSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'UserAttempt'
     },
-    username: {
-      type: String,
-      default: null
-    },
     createdAt: {
       type: Date,
-      default: Date.now
+      default: Date.now()
     },
     updatedAt: {
       type: Date,

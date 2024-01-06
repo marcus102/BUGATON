@@ -10,7 +10,7 @@ router.post(
   '/upload_image',
   imagesController.uploadImage,
   imagesController.setRequiredIds,
-  imagesController.addProfile
+  authenticatioController.signUp
 );
 
 router

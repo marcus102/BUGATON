@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const multer = require('multer'); // For handling file uploads
+const multer = require('multer');
 const Image = require('./../models/imagesModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./handlerFactory');
@@ -11,7 +11,6 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
-  setIfUndefined('username', req.user.username);
   setIfUndefined('bugReport', req.params.bug_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
   setIfUndefined('bugFix', req.params.bug_fixes_id);
@@ -35,33 +34,6 @@ const upload = multer({ storage: storage });
 // Handle POST request to upload an image
 exports.uploadImage = upload.single('image');
 
-exports.addProfile = catchAsync(async (req, res, next) => {
-  // Check if an image file was provided in the request
-  if (!req.file) {
-    return next(appError('No image file provided', 400));
-  }
-  // Create a new Image document
-  const newImage = await Image.create({
-    imageUrl: path.join(__dirname, '..', 'assets', 'images', req.file.filename),
-    caption: req.body.caption,
-    tags: req.body.tags,
-    likes: req.body.likes,
-    privacy: req.body.privacy,
-    size: req.file.size,
-    fileFormat: req.file.mimetype,
-    downloads: req.body.downloads,
-    user: req.body.user,
-    username: req.body.username
-  });
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      newImage
-    }
-  });
-});
-
 exports.createImage = catchAsync(async (req, res, next) => {
   // Check if an image file was provided in the request
   if (!req.file) {
@@ -80,8 +52,7 @@ exports.createImage = catchAsync(async (req, res, next) => {
     user: req.body.user,
     bugReport: req.body.bugReport,
     reusableCode: req.body.reusableCode,
-    bugFix: req.body.bugFix,
-    profileId: req.body.profileId
+    bugFix: req.body.bugFix
   });
 
   res.status(201).json({

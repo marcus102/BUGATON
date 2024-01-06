@@ -44,14 +44,14 @@ const userAttemptSchema = new mongoose.Schema(
       {
         name: String,
         version: String,
-        default: null
+        default: []
       }
     ],
     contributors: [
       {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        default: null
+        default: []
       }
     ],
     contributorsCount: {
