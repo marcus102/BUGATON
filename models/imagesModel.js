@@ -137,27 +137,9 @@ const imageSchema = new mongoose.Schema(
   }
 );
 
-imageSchema.pre('save', function(next) {
-  const fieldsToCheck = [
-    'imageUrl',
-    'caption',
-    'codeSnippet',
-    'tags',
-    'tags',
-    'description',
-    'privacy',
-    'fileFormat'
-  ];
+imageSchema.pre('findOneAndUpdate', function(next) {
+  this.getUpdate().updatedAt = Date.now();
 
-  const isFieldsUnmodified = !fieldsToCheck.some(field =>
-    this.isModified(field)
-  );
-
-  if (isFieldsUnmodified || this.isNew) {
-    return next();
-  }
-
-  this.updatedAt = Date.now();
   next();
 });
 

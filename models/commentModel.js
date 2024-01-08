@@ -81,18 +81,9 @@ commentSchema.pre(/^find/, function(next) {
   next();
 });
 
-commentSchema.pre('save', function(next) {
-  const fieldsToCheck = ['comment', 'parentComment'];
+commentSchema.pre('findOneAndUpdate', function(next) {
+  this.getUpdate().updatedAt = Date.now();
 
-  const isFieldsUnmodified = !fieldsToCheck.some(field =>
-    this.isModified(field)
-  );
-
-  if (isFieldsUnmodified || this.isNew) {
-    return next();
-  }
-
-  this.updatedAt = Date.now();
   next();
 });
 

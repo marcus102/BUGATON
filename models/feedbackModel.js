@@ -52,18 +52,9 @@ feedbackSchema.pre(/^find/, function(next) {
   next();
 });
 
-feedbackSchema.pre('save', function(next) {
-  const fieldsToCheck = ['feedback', 'rating', 'agreement'];
+feedbackSchema.pre('findOneAndUpdate', function(next) {
+  this.getUpdate().updatedAt = Date.now();
 
-  const isFieldsUnmodified = !fieldsToCheck.some(field =>
-    this.isModified(field)
-  );
-
-  if (isFieldsUnmodified || this.isNew) {
-    return next();
-  }
-
-  this.updatedAt = Date.now();
   next();
 });
 

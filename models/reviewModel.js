@@ -45,11 +45,9 @@ reviewSchema.pre(/^find/, function(next) {
   next();
 });
 
-reviewSchema.pre('save', function(next) {
-  if (!(this.isModified('review') || this.isModified('rating')) || this.isNew)
-    return next();
+reviewSchema.pre('findOneAndUpdate', function(next) {
+  this.getUpdate().updatedAt = Date.now();
 
-  this.updatedAt = Date.now();
   next();
 });
 

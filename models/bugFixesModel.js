@@ -75,6 +75,12 @@ const userAttemptSchema = new mongoose.Schema(
   }
 );
 
+userAttemptSchema.pre('findOneAndUpdate', function(next) {
+  this.getUpdate().updatedAt = Date.now();
+
+  next();
+});
+
 userAttemptSchema.pre('save', function(next) {
   const fieldsToCheck = [
     'solution',

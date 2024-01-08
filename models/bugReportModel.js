@@ -131,33 +131,9 @@ const bugReportSchema = new mongoose.Schema(
   }
 );
 
-bugReportSchema.pre('save', function(next) {
-  const fieldsToCheck = [
-    'title',
-    'description',
-    'stepsToReproduce',
-    'expectedBehavior',
-    'actualBehavior',
-    'browser',
-    'operatingSystem',
-    'device',
-    'severity',
-    'status',
-    'assignedTo',
-    'contributors',
-    'operatingSystem',
-    'zoneOfInterests'
-  ];
+bugReportSchema.pre('findOneAndUpdate', function(next) {
+  this.getUpdate().updatedAt = Date.now();
 
-  const isFieldsUnmodified = !fieldsToCheck.some(field =>
-    this.isModified(field)
-  );
-
-  if (isFieldsUnmodified || this.isNew) {
-    return next();
-  }
-
-  this.updatedAt = Date.now();
   next();
 });
 
@@ -181,24 +157,6 @@ bugReportSchema.pre(/^find/, function(next) {
     path: 'assignedTo',
     select: 'username profile'
   });
-
-  next();
-});
-
-bugReportSchema.pre('save', function(next) {
-  const fieldsToCheck = [
-    'title',
-    'description',
-    'stepsToReproduce',
-    'expectedBehavior',
-    'actualBehavior',
-    'images'
-    // Add other fields as needed
-  ];
-
-  if (fieldsToCheck.some(field => this.isModified(field))) {
-    this.updatedAt = Date.now();
-  }
 
   next();
 });
