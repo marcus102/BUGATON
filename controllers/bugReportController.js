@@ -1,6 +1,4 @@
 const BugReport = require('./../models/bugReportModel');
-// const catchAsync = require('../utils/catchAsync');
-// const appError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 
 exports.setRequiredIds = (req, res, next) => {

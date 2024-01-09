@@ -51,7 +51,7 @@ const userAttemptSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        default: []
+        default: null
       }
     ],
     status: {

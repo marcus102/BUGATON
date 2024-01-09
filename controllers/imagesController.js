@@ -18,7 +18,6 @@ exports.setRequiredIds = (req, res, next) => {
   next();
 };
 
-// Multer configuration for handling file uploads
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './../BUGATON/assets/images'); // Specify the destination folder
@@ -31,7 +30,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// Handle POST request to upload an image
 exports.uploadImage = upload.single('image');
 
 exports.createImage = catchAsync(async (req, res, next) => {
@@ -130,6 +128,4 @@ exports.deleteImage = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllImages = factory.getAll(Image);
-// exports.createImage2 = factory.createOne(Image);
 exports.getImage = factory.getOne(Image);
-// exports.updateImage2 = factory.updateOne(Image);

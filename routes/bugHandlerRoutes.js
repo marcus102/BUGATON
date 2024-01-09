@@ -15,6 +15,7 @@ router.use('/:bug_id/image', imageRouter);
 router.use('/:bug_report_id/bug_fixes/:bug_fixes_id/image', imageRouter);
 
 router.use(authenticatioController.protect);
+
 router
   .route('/')
   .get(bugReportController.getAllBugs)

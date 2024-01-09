@@ -17,6 +17,10 @@ const feedbackSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
+    target: {
+      type: String,
+      default: null
+    },
     agreement: {
       type: String,
       enum: [
