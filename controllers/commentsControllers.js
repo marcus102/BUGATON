@@ -1,4 +1,4 @@
-const appError = require('../utils/appError');
+// const appError = require('../utils/appError');
 const Comment = require('./../models/commentModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
@@ -15,13 +15,7 @@ exports.setRequiredIds = (req, res, next) => {
   next();
 };
 
-exports.getAllComments = factory.getAll(Comment);
-
 exports.createComment = catchAsync(async (req, res, next) => {
-  if (!req.body.comment && req.params.id) {
-    return next(appError('Comment not specified!', 400));
-  }
-
   const createComment = await Comment.create({
     comment: req.body.comment,
     parentComment: req.params.id,
@@ -36,7 +30,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
     data: createComment
   });
 });
-
+exports.getAllComments = factory.getAll(Comment);
 exports.getComment = factory.getOne(Comment, { path: 'childComments' });
 exports.deleteComment = factory.deleteOne(Comment);
 exports.updateComment = factory.updateOne(Comment);
