@@ -5,6 +5,7 @@ const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const appError = require('../utils/appError');
 const factory = require('./handlerFactory');
+const filterParams = require('./../utils/filterParams');
 
 exports.setRequiredIds = (req, res, next) => {
   const setIfUndefined = (field, value) => {
@@ -16,14 +17,14 @@ exports.setRequiredIds = (req, res, next) => {
   next();
 };
 
-const filterObj = (obj, ...allowedFields) => {
-  const newObj = {};
-  Object.keys(obj).forEach(el => {
-    if (allowedFields.includes(el)) newObj[el] = obj[el];
-  });
+// const filterObj = (obj, ...allowedFields) => {
+//   const newObj = {};
+//   Object.keys(obj).forEach(el => {
+//     if (allowedFields.includes(el)) newObj[el] = obj[el];
+//   });
 
-  return newObj;
-};
+//   return newObj;
+// };
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -86,7 +87,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     return next(appError('This route is not for password update!', 400));
   }
 
-  const filteredBody = filterObj(
+  const filteredBody = filterParams.allowedFields(
     req.body,
     'firstName',
     'lastName',
@@ -96,7 +97,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'email',
     'website',
     'bio',
-    'location'
+    'location',
+    'zoneOfInterests'
   );
 
   filteredBody.profile = path.join(

@@ -1,7 +1,8 @@
-// const appError = require('../utils/appError');
+const appError = require('../utils/appError');
 const BugFixes = require('./../models/bugFixesModel');
 const factory = require('./handlerFactory');
-// const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('../utils/catchAsync');
+const filterParams = require('./../utils/filterParams');
 
 exports.setRequiredIds = (req, res, next) => {
   if (!req.body.user) req.body.user = req.user.id;
@@ -16,5 +17,28 @@ exports.getBugFix = factory.getOne(BugFixes, [
   { path: 'reviews' },
   { path: 'comments' }
 ]);
-exports.updateBugFix = factory.updateOne(BugFixes);
+
+exports.updateBugFix = catchAsync(async (req, res, next) => {
+  const bugFix = await BugFixes.findById(req.params.id);
+
+  if (!bugFix) {
+    return next(appError('Bug Fix not found!', 404));
+  }
+
+  const filteredBody = filterParams.excludedFields(req.body, 'status');
+
+  const updatedBugFix = await BugFixes.findByIdAndUpdate(
+    req.params.id,
+    filteredBody,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  res.status(201).json({
+    status: 'success',
+    data: updatedBugFix
+  });
+});
 exports.deleteBugFix = factory.deleteOne(BugFixes);
