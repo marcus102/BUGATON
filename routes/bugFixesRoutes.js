@@ -13,13 +13,10 @@ router.use('/:bug_fixes_id/image', imageRouter);
 
 router.use(authenticatioController.protect);
 
-router.post(
-  '/create',
-  bugFixesController.setRequiredIds,
-  bugFixesController.createBugFix
-);
-
-router.get('/', bugFixesController.getALLBugFixes);
+router
+  .route('/')
+  .get(bugFixesController.getALLBugFixes)
+  .post(bugFixesController.setRequiredIds, bugFixesController.createBugFix);
 
 router
   .route('/:id')
