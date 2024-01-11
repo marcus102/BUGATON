@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const globalErrorHandler = require('./controllers/errorsController');
 const appError = require('./utils/appError');
-const bugHandlerRouter = require('./routes/bugHandlerRoutes');
+const bugReportRouter = require('./routes/bugReportRoutes');
 const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewsRoutes');
 const analyticsRouter = require('./routes/analyticsRoutes');
@@ -19,6 +19,7 @@ const trainingRouter = require('./routes/trainingRoutes');
 const commentRouter = require('./routes/commentsRoutes');
 const imageRouter = require('./routes/imagesRoutes');
 const reusableCodeRouter = require('./routes/reusableCodeRoutes');
+const bugFixRouter = require('./routes/bugFixesRoutes');
 
 const app = express();
 
@@ -34,7 +35,8 @@ app.use(`${rootUrl}/users`, userRouter);
 app.use(`${rootUrl}/images`, imageRouter);
 app.use(`${rootUrl}/reviews`, reviewRouter);
 app.use(`${rootUrl}/comments`, commentRouter);
-app.use(`${rootUrl}/bugs`, bugHandlerRouter);
+app.use(`${rootUrl}/bugs`, bugReportRouter);
+app.use(`${rootUrl}/bug_fixes`, bugFixRouter);
 app.use(`${rootUrl}/reusable_codes`, reusableCodeRouter);
 app.use(`${rootUrl}/feedbacks`, feedbackRouter);
 app.use(`${rootUrl}/events`, eventRouter);

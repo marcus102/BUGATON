@@ -28,7 +28,7 @@ exports.setRequiredIds = (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, './../BUGATON/assets/images');
+    cb(null, './../BUGATON/assets/profiles');
   },
   filename: function(req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -53,7 +53,7 @@ exports.deleteImage = catchAsync(async (req, res, next) => {
     __dirname,
     '..',
     'assets',
-    'images',
+    'profiles',
     path.basename(imagePath.profile)
   );
 
@@ -105,7 +105,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     __dirname,
     '..',
     'assets',
-    'images',
+    'profiles',
     req.body.profile
   );
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
