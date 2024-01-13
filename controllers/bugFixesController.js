@@ -1,5 +1,6 @@
 const appError = require('../utils/appError');
 const BugFixes = require('./../models/bugFixesModel');
+// const BugReport = require('./../models/bugReportModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const filterParams = require('./../utils/filterParams');
@@ -41,4 +42,6 @@ exports.updateBugFix = catchAsync(async (req, res, next) => {
     data: updatedBugFix
   });
 });
+
+// exports.updateBugReportAttempts = catchAsync(async (req, res, next) => {});
 exports.deleteBugFix = factory.deleteOne(BugFixes);

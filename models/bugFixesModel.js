@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const BugReport = require('./bugReportModel');
 
 const userAttemptSchema = new mongoose.Schema(
   {
@@ -37,6 +38,17 @@ const userAttemptSchema = new mongoose.Schema(
       default: 0
     },
     shareCount: {
+      type: Number,
+      default: 0
+    },
+    ratingsAverage: {
+      type: Number,
+      default: null,
+      min: [1, 'rating must not be below 1.0 !'],
+      max: [5, 'rating must not be above 5.0 !'],
+      set: value => Math.round(value * 10) / 10
+    },
+    ratingsQuantity: {
       type: Number,
       default: 0
     },
@@ -131,6 +143,51 @@ userAttemptSchema.virtual('comments', {
   ref: 'Comment',
   localField: '_id',
   foreignField: 'post'
+});
+
+userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
+  try {
+    const stats = await this.aggregate([
+      {
+        $match: { bugReport: bugID }
+      },
+      {
+        $group: {
+          _id: '$bugReport',
+          nAttempts: { $sum: 1 },
+          contributors: { $addToSet: '$user' }
+        }
+      }
+    ]);
+
+    if (stats.length > 0) {
+      await BugReport.findOneAndUpdate(
+        { _id: bugID },
+        {
+          $set: {
+            totalAttempts: stats[0].nAttempts,
+            contributors: stats[0].contributors
+          }
+        },
+        { new: true }
+      );
+    } else {
+      // Handle the case when there are no attempts
+      await BugReport.findOneAndUpdate(
+        { _id: bugID },
+        { $set: { totalAttempts: 0, contributors: [] } },
+        { new: true }
+      );
+    }
+  } catch (error) {
+    console.error(`Error updating bug report stats: ${error.message}`);
+
+    // Handle the error, throw or log as needed
+  }
+};
+
+userAttemptSchema.post('save', function() {
+  this.constructor.updateBugReportStats(this.bugReport);
 });
 
 const UserAttempt = mongoose.model('UserAttempt', userAttemptSchema);
