@@ -90,6 +90,26 @@ const userSchema = new mongoose.Schema(
       ],
       default: 'user'
     },
+    totalBugFix: {
+      type: Number,
+      default: 0
+    },
+    bugFixes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserAttempt'
+      }
+    ],
+    totalBugReport: {
+      type: Number,
+      default: 0
+    },
+    bugReort: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'BugReport'
+      }
+    ],
     zoneOfInterests: [
       {
         type: String,

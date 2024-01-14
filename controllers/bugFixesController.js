@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const appError = require('../utils/appError');
 const BugFixes = require('./../models/bugFixesModel');
 // const BugReport = require('./../models/bugReportModel');
@@ -43,5 +44,40 @@ exports.updateBugFix = catchAsync(async (req, res, next) => {
   });
 });
 
-// exports.updateBugReportAttempts = catchAsync(async (req, res, next) => {});
 exports.deleteBugFix = factory.deleteOne(BugFixes);
+
+exports.getUserTotalBugFixes = catchAsync(async (req, res, next) => {
+  const userId = req.body.user;
+
+  const result = await BugFixes.aggregate([
+    {
+      $match: { user: new mongoose.Types.ObjectId(userId) }
+    },
+    {
+      $group: {
+        _id: null,
+        totalAttempts: { $sum: 1 },
+        bugIds: { $push: '$_id' }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        totalAttempts: 1,
+        bugIds: 1
+      }
+    }
+  ]);
+
+  if (result.length === 0) {
+    return next(appError('User not found or no bug fixes for the user.', 404));
+  }
+
+  const userBugFixes = result[0];
+  res.status(200).json({
+    status: 'success',
+    data: {
+      userBugFixes
+    }
+  });
+});

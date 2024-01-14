@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const BugReport = require('./bugReportModel');
+// const User = require('./../models/userModel');
 
 const userAttemptSchema = new mongoose.Schema(
   {
@@ -156,21 +157,35 @@ userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
           _id: '$bugReport',
           nAttempts: { $sum: 1 },
           contributors: { $addToSet: '$user' }
+          // totalUserAttempt: { $sum: 1 },
+          // bugFix: { $addToSet: '$bugReport' }
         }
       }
     ]);
 
     if (stats.length > 0) {
+      const { nAttempts, contributors } = stats[0];
       await BugReport.findOneAndUpdate(
         { _id: bugID },
         {
           $set: {
-            totalAttempts: stats[0].nAttempts,
-            contributors: stats[0].contributors
+            totalAttempts: nAttempts,
+            contributors: contributors
           }
         },
         { new: true }
       );
+
+      // await User.findByIdAndUpdate(
+      //   { _id: userID },
+      //   {
+      //     $set: {
+      //       totalBugFix: stats[0].totalUserAttempt,
+      //       bugFixes: stats[0].bugFix
+      //     }
+      //   },
+      //   { new: true }
+      // );
     } else {
       // Handle the case when there are no attempts
       await BugReport.findOneAndUpdate(
@@ -178,6 +193,14 @@ userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
         { $set: { totalAttempts: 0, contributors: [] } },
         { new: true }
       );
+
+      // await User.findByIdAndUpdate(
+      //   { _id: userID },
+      //   {
+      //     $set: { totalBugFix: 0, bugFixes: [] }
+      //   },
+      //   { new: true }
+      // );
     }
   } catch (error) {
     console.error(`Error updating bug report stats: ${error.message}`);

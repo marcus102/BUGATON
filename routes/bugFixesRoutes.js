@@ -13,6 +13,12 @@ router.use('/:bug_fixes_id/image', imageRouter);
 
 router.use(authenticatioController.protect);
 
+router.get(
+  '/userTotalAttempts',
+  bugFixesController.setRequiredIds,
+  bugFixesController.getUserTotalBugFixes
+);
+
 router
   .route('/')
   .get(bugFixesController.getALLBugFixes)
