@@ -147,65 +147,37 @@ userAttemptSchema.virtual('comments', {
 });
 
 userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
-  try {
-    const stats = await this.aggregate([
-      {
-        $match: { bugReport: bugID }
-      },
-      {
-        $group: {
-          _id: '$bugReport',
-          nAttempts: { $sum: 1 },
-          contributors: { $addToSet: '$user' }
-          // totalUserAttempt: { $sum: 1 },
-          // bugFix: { $addToSet: '$bugReport' }
-        }
+  const stats = await this.aggregate([
+    {
+      $match: { bugReport: bugID }
+    },
+    {
+      $group: {
+        _id: '$bugReport',
+        nAttempts: { $sum: 1 },
+        contributors: { $addToSet: '$user' }
       }
-    ]);
-
-    if (stats.length > 0) {
-      const { nAttempts, contributors } = stats[0];
-      await BugReport.findOneAndUpdate(
-        { _id: bugID },
-        {
-          $set: {
-            totalAttempts: nAttempts,
-            contributors: contributors
-          }
-        },
-        { new: true }
-      );
-
-      // await User.findByIdAndUpdate(
-      //   { _id: userID },
-      //   {
-      //     $set: {
-      //       totalBugFix: stats[0].totalUserAttempt,
-      //       bugFixes: stats[0].bugFix
-      //     }
-      //   },
-      //   { new: true }
-      // );
-    } else {
-      // Handle the case when there are no attempts
-      await BugReport.findOneAndUpdate(
-        { _id: bugID },
-        { $set: { totalAttempts: 0, contributors: [] } },
-        { new: true }
-      );
-
-      // await User.findByIdAndUpdate(
-      //   { _id: userID },
-      //   {
-      //     $set: { totalBugFix: 0, bugFixes: [] }
-      //   },
-      //   { new: true }
-      // );
     }
-  } catch (error) {
-    console.error(`Error updating bug report stats: ${error.message}`);
+  ]);
 
-    // Handle the error, throw or log as needed
+  if (stats.length > 0) {
+    const { nAttempts, contributors } = stats[0];
+    await BugReport.findOneAndUpdate(
+      { _id: bugID },
+      {
+        $set: {
+          totalAttempts: nAttempts,
+          contributors: contributors
+        }
+      },
+      { new: true }
+    );
+  } else {
+    await BugReport.findOneAndUpdate(
+      { _id: bugID },
+      { $set: { totalAttempts: 0, contributors: [] } },
+      { new: true }
+    );
   }
 };
 

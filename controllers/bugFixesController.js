@@ -7,8 +7,12 @@ const catchAsync = require('../utils/catchAsync');
 const filterParams = require('./../utils/filterParams');
 
 exports.setRequiredIds = (req, res, next) => {
-  if (!req.body.user) req.body.user = req.user.id;
-  if (!req.body.bugReport) req.body.bugReport = req.params.bug_id;
+  const setIfUndefined = (field, value) => {
+    if (!req.body[field]) req.body[field] = value;
+  };
+  setIfUndefined('user', req.user.id);
+  setIfUndefined('bugReport', req.params.bug_id);
+
   next();
 };
 

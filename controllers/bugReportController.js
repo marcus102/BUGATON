@@ -2,7 +2,11 @@ const BugReport = require('./../models/bugReportModel');
 const factory = require('./handlerFactory');
 
 exports.setRequiredIds = (req, res, next) => {
-  if (!req.body.user) req.body.user = req.user.id;
+  const setIfUndefined = (field, value) => {
+    if (!req.body[field]) req.body[field] = value;
+  };
+  setIfUndefined('user', req.user.id);
+
   next();
 };
 
