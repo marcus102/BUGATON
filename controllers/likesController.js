@@ -2,6 +2,7 @@ const Like = require('./../models/likesModel');
 const BugFixes = require('./../models/bugFixesModel');
 const ReusableCode = require('./../models/reusableCodeModel');
 const catchAsync = require('./../utils/catchAsync');
+const factory = require('./handlerFactory');
 // const appError = require('./../utils/appError');
 
 exports.setRequiredIds = (req, res, next) => {
@@ -39,3 +40,6 @@ exports.toggleLike = catchAsync(async (req, res, next) => {
 
   res.status(200).json({ status: 'success' });
 });
+
+exports.getAllUsersThatLikePosts = factory.getAll(Like);
+exports.getUserThatLikePosts = factory.getOne(Like);

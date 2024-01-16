@@ -1,13 +1,15 @@
 const express = require('express');
 const reusableCodeController = require('./../controllers/reusableCodeControllerjs');
 const authenticatioController = require('./../controllers/authenticatioController');
-const imageRouter = require('./../routes/imagesRoutes');
-const commentRouter = require('./../routes/commentsRoutes');
+const imageRouter = require('./imagesRoutes');
+const commentRouter = require('./commentsRoutes');
+const likesRouter = require('./likeRoutes');
 
 const router = express.Router({ mergeParams: true });
 
 router.use('/:reusable_code_id/image', imageRouter);
 router.use('/:reusable_code_id/comments', commentRouter);
+router.use('/:reusable_code_id/likes', likesRouter);
 
 router.use(authenticatioController.protect);
 

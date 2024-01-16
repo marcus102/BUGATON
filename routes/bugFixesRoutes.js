@@ -1,7 +1,8 @@
 const express = require('express');
-const commentsRouter = require('./../routes/commentsRoutes');
-const reviewRouter = require('./../routes/reviewsRoutes');
-const imageRouter = require('./../routes/imagesRoutes');
+const commentsRouter = require('./commentsRoutes');
+const reviewRouter = require('./reviewsRoutes');
+const imageRouter = require('./imagesRoutes');
+const likesRouter = require('./likeRoutes');
 const authenticatioController = require('../controllers/authenticatioController');
 const bugFixesController = require('../controllers/bugFixesController');
 
@@ -10,6 +11,7 @@ const router = express.Router({ mergeParams: true });
 router.use('/:bug_fixes_id/comments', commentsRouter);
 router.use('/:bug_fixes_id/reviews', reviewRouter);
 router.use('/:bug_fixes_id/image', imageRouter);
+router.use('/:bug_fixes_id/likes', likesRouter);
 
 router.use(authenticatioController.protect);
 
