@@ -42,7 +42,7 @@ const userAttemptSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    ratingsAverage: {
+    ratings: {
       type: Number,
       default: null,
       min: [1, 'rating must not be below 1.0 !'],
@@ -56,8 +56,7 @@ const userAttemptSchema = new mongoose.Schema(
     frameworkVersions: [
       {
         name: String,
-        version: String,
-        default: []
+        version: String
       }
     ],
     contributors: [

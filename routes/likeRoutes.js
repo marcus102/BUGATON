@@ -10,7 +10,7 @@ router
   .route('/')
   .post(likesController.setRequiredIds, likesController.toggleLike)
   .get(
-    authenticatioController.restrictTo('admin, user'),
+    authenticatioController.restrictTo('admin', 'user'),
     likesController.getAllUsersThatLikePosts
   );
 
