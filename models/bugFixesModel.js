@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const BugReport = require('./bugReportModel');
-// const User = require('./../models/userModel');
 
 const userAttemptSchema = new mongoose.Schema(
   {
@@ -115,12 +114,6 @@ userAttemptSchema.pre('save', function(next) {
   next();
 });
 
-userAttemptSchema.virtual('image', {
-  ref: 'Image',
-  localField: '_id',
-  foreignField: 'bugFix'
-});
-
 userAttemptSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',
@@ -137,6 +130,12 @@ userAttemptSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
   foreignField: 'post'
+});
+
+userAttemptSchema.virtual('image', {
+  ref: 'Image',
+  localField: '_id',
+  foreignField: 'bugFix'
 });
 
 userAttemptSchema.virtual('comments', {

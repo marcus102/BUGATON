@@ -24,4 +24,16 @@ router
   .patch(bugReportController.updateBug)
   .delete(bugReportController.deleteBug);
 
+router.patch(
+  '/:id/assignBugTo/:assigneeId',
+  bugReportController.setRequiredIds,
+  bugReportController.assignBugToUser
+);
+
+router.patch(
+  '/:id/deassignBugTo/:assigneeId',
+  bugReportController.setRequiredIds,
+  bugReportController.deassignBugFromUser
+);
+
 module.exports = router;
