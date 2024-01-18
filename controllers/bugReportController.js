@@ -1,4 +1,6 @@
+// const mongoose = require('mongoose');
 const BugReport = require('./../models/bugReportModel');
+const User = require('./../models/userModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const appError = require('./../utils/appError');
@@ -17,13 +19,25 @@ exports.assignBugToUser = catchAsync(async (req, res, next) => {
   const bug = await BugReport.findById(req.body.bugReport);
 
   if (!bug) {
-    return next(appError('Documment not found', 404));
+    return next(appError('Document not found', 404));
+  }
+
+  const { assigneeId } = req.params;
+
+  const userExists = await User.findById(assigneeId);
+  if (!userExists) {
+    return next(appError('User not found', 404));
+  }
+
+  const assignedToIds = bug.assignedTo.map(user => user._id.toString());
+  if (bug.assignedTo && assignedToIds.includes(assigneeId)) {
+    return next(appError('Bug already assigned to user', 400));
   }
 
   if (!bug.assignedTo) {
-    bug.assignedTo = req.params.assigneeId;
+    bug.assignedTo = [assigneeId];
   } else {
-    bug.assignedTo.push(req.params.assigneeId);
+    bug.assignedTo.push(assigneeId);
   }
 
   await bug.save();
