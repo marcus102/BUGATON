@@ -87,7 +87,7 @@ const bugReportSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        default: null
+        default: []
       }
     ],
     viewCount: {

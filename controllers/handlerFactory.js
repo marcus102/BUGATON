@@ -98,3 +98,55 @@ exports.getAll = Model =>
       }
     });
   });
+
+exports.handleAssignment = (operation, userDB, bugReportDB) =>
+  catchAsync(async (req, res, next) => {
+    const bugId = req.body.bugReport;
+    const { assigneeId } = req.params;
+    const bug = await bugReportDB.findById(bugId);
+
+    if (!bug) {
+      return next(appError('Document not found', 404));
+    }
+
+    const userExists = await userDB.findById(assigneeId);
+
+    if (!userExists) {
+      return next(appError('User not found', 404));
+    }
+
+    if (operation === 'assign') {
+      if (bug.assignedTo) {
+        const assignedToIds = bug.assignedTo.map(user => user._id.toString());
+        if (assignedToIds.includes(assigneeId)) {
+          return next(appError('Bug already assigned to user', 409));
+        }
+      }
+
+      await bugReportDB.updateOne(
+        { _id: bugId },
+        { $push: { assignedTo: assigneeId } }
+      );
+    } else if (operation === 'deassign') {
+      if (!bug.assignedTo) {
+        return next(appError('Bug has not been assigned to a user yet!', 404));
+      }
+
+      const assignedToIds = bug.assignedTo.map(user => user._id.toString());
+      if (!assignedToIds.includes(assigneeId)) {
+        return next(appError('Bug already deassigned from user', 404));
+      }
+
+      await bugReportDB.updateOne(
+        { _id: bugId },
+        { $pull: { assignedTo: assigneeId } }
+      );
+    }
+
+    const updatedBug = await bugReportDB.findById(bugId);
+
+    res.status(200).json({
+      status: 'success',
+      data: updatedBug
+    });
+  });
