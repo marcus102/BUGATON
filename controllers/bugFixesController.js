@@ -15,24 +15,6 @@ exports.setRequiredIds = (req, res, next) => {
   next();
 };
 
-exports.createBugFix = catchAsync(async (req, res, next) => {
-  const createComment = await BugFixes.create({
-    solution: req.body.solution,
-    description: req.body.description,
-    result: req.body.result,
-    parentSolution: req.params.id,
-    user: req.body.user,
-    bugReport: req.body.bugReport,
-    frameworkVersions: req.body.frameworkVersions
-  });
-
-  res.status(201).json({
-    status: 'success',
-    data: createComment
-  });
-});
-
-// exports.createBugFix = factory.createOne(BugFixes);
 exports.getALLBugFixes = factory.getAll(BugFixes, { path: 'childSolutions' });
 exports.getBugFix = factory.getOne(BugFixes, [
   { path: 'image' },
@@ -100,5 +82,33 @@ exports.getUserTotalBugFixes = catchAsync(async (req, res, next) => {
     data: {
       userBugFixes
     }
+  });
+});
+
+exports.createBugFix = catchAsync(async (req, res, next) => {
+  const createComment = await BugFixes.create({
+    solution: req.body.solution,
+    description: req.body.description,
+    result: req.body.result,
+    parentSolution: req.params.id,
+    user: req.body.user,
+    bugReport: req.body.bugReport,
+    frameworkVersions: req.body.frameworkVersions
+  });
+
+  if (req.params.id) {
+    await BugFixes.findByIdAndUpdate(
+      req.params.id,
+      {
+        $inc: { totalAttempts: 1 },
+        $addToSet: { contributors: req.body.user }
+      },
+      { new: true }
+    );
+  }
+
+  res.status(201).json({
+    status: 'success',
+    data: createComment
   });
 });
