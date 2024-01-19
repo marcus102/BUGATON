@@ -15,6 +15,11 @@ const userAttemptSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Result to the solution must be provided!']
     },
+    parentSolution: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserAttempt',
+      default: null
+    },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
@@ -62,7 +67,7 @@ const userAttemptSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.ObjectId,
         ref: 'User',
-        default: null
+        default: []
       }
     ],
     status: {
@@ -142,6 +147,12 @@ userAttemptSchema.virtual('comments', {
   ref: 'Comment',
   localField: '_id',
   foreignField: 'post'
+});
+
+userAttemptSchema.virtual('childSolutions', {
+  ref: 'UserAttempt',
+  localField: '_id',
+  foreignField: 'parentSolution'
 });
 
 userAttemptSchema.statics.updateBugReportStats = async function(bugID) {

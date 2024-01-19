@@ -30,7 +30,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
     data: createComment
   });
 });
-exports.getAllComments = factory.getAll(Comment);
+exports.getAllComments = factory.getAll(Comment, { path: 'childComments' });
 exports.getComment = factory.getOne(Comment, { path: 'childComments' });
 exports.deleteComment = factory.deleteOne(Comment);
 exports.updateComment = factory.updateOne(Comment);
