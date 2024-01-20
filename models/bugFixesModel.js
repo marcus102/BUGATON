@@ -159,43 +159,6 @@ userAttemptSchema.virtual('childSolutions', {
   foreignField: 'parentSolution'
 });
 
-// userAttemptSchema.statics.updateBugReportStats = async function(
-//   parentSolutionID
-// ) {
-//   const stats = await this.aggregate([
-//     {
-//       $match: { bugReport: parentSolutionID }
-//     },
-//     {
-//       $group: {
-//         _id: '$bugReport',
-//         nAttempts: { $sum: 1 },
-//         contributors: { $addToSet: '$user' }
-//       }
-//     }
-//   ]);
-
-//   if (stats.length > 0) {
-//     const { nAttempts, contributors } = stats[0];
-//     await BugReport.findOneAndUpdate(
-//       { _id: parentSolutionID },
-//       {
-//         $set: {
-//           totalAttempts: nAttempts,
-//           contributors: contributors
-//         }
-//       },
-//       { new: true }
-//     );
-//   } else {
-//     await BugReport.findOneAndUpdate(
-//       { _id: parentSolutionID },
-//       { $set: { totalAttempts: 0, contributors: [] } },
-//       { new: true }
-//     );
-//   }
-// };
-
 userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
   const stats = await this.aggregate([
     {

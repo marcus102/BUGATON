@@ -21,23 +21,7 @@ const userSchema = new mongoose.Schema(
         true,
         'Sorry, the username is already in use. Please choose another one!'
       ],
-      trim: true,
-      validate: [
-        {
-          validator: function(value) {
-            // Check if the username starts with "@"
-            return value.startsWith('@');
-          },
-          message: 'Username must start with "@" symbol!'
-        },
-        {
-          validator: function(value) {
-            const atCount = (value.match(/@/g) || []).length;
-            return atCount === 1;
-          },
-          message: 'Username must contain only one "@" symbol!'
-        }
-      ]
+      trim: true
     },
     email: {
       type: String,
@@ -90,26 +74,6 @@ const userSchema = new mongoose.Schema(
       ],
       default: 'user'
     },
-    totalBugFix: {
-      type: Number,
-      default: 0
-    },
-    bugFixes: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserAttempt'
-      }
-    ],
-    totalBugReport: {
-      type: Number,
-      default: 0
-    },
-    bugReort: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'BugReport'
-      }
-    ],
     zoneOfInterests: [
       {
         type: String,
