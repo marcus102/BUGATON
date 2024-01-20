@@ -79,9 +79,7 @@ exports.getUserTotalBugFixes = catchAsync(async (req, res, next) => {
   const userBugFixes = result[0];
   res.status(200).json({
     status: 'success',
-    data: {
-      userBugFixes
-    }
+    data: userBugFixes
   });
 });
 

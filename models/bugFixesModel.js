@@ -150,7 +150,7 @@ userAttemptSchema.virtual('image', {
 userAttemptSchema.virtual('comments', {
   ref: 'Comment',
   localField: '_id',
-  foreignField: 'post'
+  foreignField: 'bugFix'
 });
 
 userAttemptSchema.virtual('childSolutions', {
