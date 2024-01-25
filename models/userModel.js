@@ -53,6 +53,14 @@ const userSchema = new mongoose.Schema(
         default: []
       }
     ],
+    followersCount: {
+      type: Number,
+      default: 0
+    },
+    followingCount: {
+      type: Number,
+      default: 0
+    },
     starCount: {
       type: Number,
       default: 0
@@ -133,7 +141,6 @@ const userSchema = new mongoose.Schema(
       select: false
     }
   },
-
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

@@ -21,6 +21,7 @@ const imageRouter = require('./routes/imagesRoutes');
 const reusableCodeRouter = require('./routes/reusableCodeRoutes');
 const bugFixRouter = require('./routes/bugFixesRoutes');
 const likesRouter = require('./routes/likeRoutes');
+const followersRouter = require('./routes/followersRoutes');
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use(`${rootUrl}/bug_fixes`, bugFixRouter);
 app.use(`${rootUrl}/reusable_codes`, reusableCodeRouter);
 app.use(`${rootUrl}/feedbacks`, feedbackRouter);
 app.use(`${rootUrl}/likes`, likesRouter);
+app.use(`${rootUrl}/followers`, followersRouter);
 app.use(`${rootUrl}/events`, eventRouter);
 app.use(`${rootUrl}/discussions`, discussionRouter);
 app.use(`${rootUrl}/integrations`, apiIntegrationsRouter);

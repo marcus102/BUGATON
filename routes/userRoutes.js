@@ -1,8 +1,9 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
 const authController = require('../controllers/authenticatioController');
+const followersRouter = require('./followersRoutes');
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
 router.post('/signup', authController.signUp);
 router.post('/login', authController.logIn);
@@ -10,6 +11,8 @@ router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
 router.use(authController.protect);
+
+router.use('/my-followers', followersRouter);
 
 router.patch(
   '/profile',
