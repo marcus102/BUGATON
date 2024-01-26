@@ -22,6 +22,7 @@ const reusableCodeRouter = require('./routes/reusableCodeRoutes');
 const bugFixRouter = require('./routes/bugFixesRoutes');
 const likesRouter = require('./routes/likeRoutes');
 const followersRouter = require('./routes/followersRoutes');
+const contributorsRouter = require('./routes/contributorsRoutes');
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use(`${rootUrl}/reusable_codes`, reusableCodeRouter);
 app.use(`${rootUrl}/feedbacks`, feedbackRouter);
 app.use(`${rootUrl}/likes`, likesRouter);
 app.use(`${rootUrl}/followers`, followersRouter);
+app.use(`${rootUrl}/contributors`, contributorsRouter);
 app.use(`${rootUrl}/events`, eventRouter);
 app.use(`${rootUrl}/discussions`, discussionRouter);
 app.use(`${rootUrl}/integrations`, apiIntegrationsRouter);

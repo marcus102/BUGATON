@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const appError = require('../utils/appError');
 const BugFixes = require('./../models/bugFixesModel');
+const Contributor = require('./../models/contributorsModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const filterParams = require('./../utils/filterParams');
@@ -20,7 +21,8 @@ exports.getBugFix = factory.getOne(BugFixes, [
   { path: 'image' },
   { path: 'reviews' },
   { path: 'comments' },
-  { path: 'childSolutions' }
+  { path: 'childSolutions' },
+  { path: 'contributors' }
 ]);
 
 exports.updateBugFix = catchAsync(async (req, res, next) => {
@@ -84,29 +86,41 @@ exports.getUserTotalBugFixes = catchAsync(async (req, res, next) => {
 });
 
 exports.createBugFix = catchAsync(async (req, res, next) => {
-  const createComment = await BugFixes.create({
-    solution: req.body.solution,
-    description: req.body.description,
-    result: req.body.result,
-    parentSolution: req.params.id,
-    user: req.body.user,
-    bugReport: req.body.bugReport,
-    frameworkVersions: req.body.frameworkVersions
+  const {
+    solution,
+    description,
+    result,
+    user,
+    bugReport,
+    frameworkVersions
+  } = req.body;
+  const { id } = req.params;
+
+  const newBugFix = await BugFixes.create({
+    solution: solution,
+    description: description,
+    result: result,
+    user: user,
+    bugReport: bugReport,
+    frameworkVersions: frameworkVersions
   });
 
-  if (req.params.id) {
-    await BugFixes.findByIdAndUpdate(
-      req.params.id,
-      {
-        $inc: { totalAttempts: 1 },
-        $addToSet: { contributors: req.body.user }
-      },
-      { new: true }
+  const contributor = await Contributor.create({
+    user: user,
+    bugFix: newBugFix._id,
+    bugReport: bugReport
+  });
+
+  if (id) {
+    await Contributor.findByIdAndUpdate(
+      contributor._id,
+      { parentContribution: id },
+      { new: true, runValidators: true }
     );
   }
 
   res.status(201).json({
     status: 'success',
-    data: createComment
+    data: newBugFix
   });
 });

@@ -23,7 +23,8 @@ exports.createBug = factory.createOne(BugReport);
 exports.getAllBugs = factory.getAll(BugReport);
 exports.getBug = factory.getOne(BugReport, [
   { path: 'userAttempts' },
-  { path: 'image' }
+  { path: 'image' },
+  { path: 'contributors' }
 ]);
 exports.updateBug = factory.updateOne(BugReport);
 exports.deleteBug = factory.deleteOne(BugReport);

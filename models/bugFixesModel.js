@@ -15,11 +15,11 @@ const userAttemptSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Result to the solution must be provided!']
     },
-    parentSolution: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserAttempt',
-      default: null
-    },
+    // parentSolution: {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'UserAttempt',
+    //   default: null
+    // },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
@@ -67,13 +67,13 @@ const userAttemptSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    contributors: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User',
-        default: []
-      }
-    ],
+    // contributors: [
+    //   {
+    //     type: mongoose.Schema.ObjectId,
+    //     ref: 'User',
+    //     default: []
+    //   }
+    // ],
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected'],
@@ -135,10 +135,16 @@ userAttemptSchema.pre(/^find/, function(next) {
   next();
 });
 
+userAttemptSchema.virtual('contributors', {
+  ref: 'Contributor',
+  localField: '_id',
+  foreignField: 'bugFix'
+});
+
 userAttemptSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
-  foreignField: 'post'
+  foreignField: 'bugFix'
 });
 
 userAttemptSchema.virtual('image', {
@@ -167,20 +173,18 @@ userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
     {
       $group: {
         _id: '$bugReport',
-        nAttempts: { $sum: 1 },
-        contributors: { $addToSet: '$user' }
+        nAttempts: { $sum: 1 }
       }
     }
   ]);
 
   if (stats.length > 0) {
-    const { nAttempts, contributors } = stats[0];
+    const { nAttempts } = stats[0];
     await BugReport.findOneAndUpdate(
       { _id: bugID },
       {
         $set: {
-          totalAttempts: nAttempts,
-          contributors: contributors
+          totalAttempts: nAttempts
         }
       },
       { new: true }
@@ -188,7 +192,7 @@ userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
   } else {
     await BugReport.findOneAndUpdate(
       { _id: bugID },
-      { $set: { totalAttempts: 0, contributors: [] } },
+      { $set: { totalAttempts: 0 } },
       { new: true }
     );
   }

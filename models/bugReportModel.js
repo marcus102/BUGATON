@@ -102,13 +102,6 @@ const bugReportSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    contributors: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: 'User',
-        default: null
-      }
-    ],
     zoneOfInterests: [
       {
         type: String,
@@ -135,6 +128,12 @@ bugReportSchema.pre('findOneAndUpdate', function(next) {
   this.getUpdate().updatedAt = Date.now();
 
   next();
+});
+
+bugReportSchema.virtual('contributors', {
+  ref: 'Contributor',
+  localField: '_id',
+  foreignField: 'bugReport'
 });
 
 bugReportSchema.virtual('userAttempts', {

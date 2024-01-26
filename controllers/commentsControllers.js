@@ -16,13 +16,20 @@ exports.setRequiredIds = (req, res, next) => {
 };
 
 exports.createComment = catchAsync(async (req, res, next) => {
+  const { user, bug, bugFix, reusableCode, comment } = req.body;
+  const { id } = req.params;
+
+  if (!bug || !bugFix || !reusableCode) {
+    return next('You are not allowed to perform this action!', 405);
+  }
+
   const createComment = await Comment.create({
-    comment: req.body.comment,
-    parentComment: req.params.id,
-    user: req.body.user,
-    bug: req.body.bug,
-    bugFix: req.body.bugFix,
-    reusableCode: req.body.reusableCode
+    comment: comment,
+    parentComment: id,
+    user: user,
+    bug: bug,
+    bugFix: bugFix,
+    reusableCode: reusableCode
   });
 
   res.status(201).json({
