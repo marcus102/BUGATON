@@ -10,4 +10,7 @@ exports.createContribution = catchAsync(async (req, res, next) => {
 exports.getAllContributions = factory.getAll(Contributor);
 exports.getContribution = factory.getOne(Contributor);
 exports.deleteContribution = factory.deleteOne(Contributor);
-exports.updateContribution = factory.updateOne(Contributor);
+
+exports.updateContribution = catchAsync(async (req, res, next) => {
+  return next(appError('Cannot perform this action with this url!', 403));
+});
