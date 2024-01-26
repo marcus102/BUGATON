@@ -67,13 +67,6 @@ const userAttemptSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    // contributors: [
-    //   {
-    //     type: mongoose.Schema.ObjectId,
-    //     ref: 'User',
-    //     default: []
-    //   }
-    // ],
     status: {
       type: String,
       enum: ['pending', 'approved', 'rejected'],

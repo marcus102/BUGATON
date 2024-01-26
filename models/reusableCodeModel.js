@@ -330,6 +330,12 @@ reusableCodeSchema.virtual('image', {
   foreignField: 'reusableCode'
 });
 
+reusableCodeSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'reusableCode'
+});
+
 reusableCodeSchema.pre('findOneAndUpdate', function(next) {
   this.getUpdate().updatedAt = Date.now();
 

@@ -148,6 +148,12 @@ bugReportSchema.virtual('image', {
   foreignField: 'bugReport'
 });
 
+bugReportSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'bugReport'
+});
+
 bugReportSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',
