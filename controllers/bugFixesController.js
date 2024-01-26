@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const appError = require('../utils/appError');
 const BugFixes = require('./../models/bugFixesModel');
+const BugReport = require('./../models/bugReportModel');
 const Contributor = require('./../models/contributorsModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
@@ -96,28 +97,34 @@ exports.createBugFix = catchAsync(async (req, res, next) => {
   } = req.body;
   const { id } = req.params;
 
+  const bugFix = await BugFixes.findById(id);
+  const bug = await BugReport.findById(bugReport);
+
+  if (!bug) {
+    return next(appError('Bug does not exist!', 404));
+  }
+
+  if (id) {
+    if (!bugFix) {
+      return next(appError('Bug fix does not exist!', 404));
+    }
+  }
+
   const newBugFix = await BugFixes.create({
     solution: solution,
     description: description,
     result: result,
     user: user,
     bugReport: bugReport,
+    parentSolution: id,
     frameworkVersions: frameworkVersions
   });
 
-  const contributor = await Contributor.create({
+  await Contributor.create({
     user: user,
     bugFix: newBugFix._id,
     bugReport: bugReport
   });
-
-  if (id) {
-    await Contributor.findByIdAndUpdate(
-      contributor._id,
-      { parentContribution: id },
-      { new: true, runValidators: true }
-    );
-  }
 
   res.status(201).json({
     status: 'success',

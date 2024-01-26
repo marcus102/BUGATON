@@ -15,11 +15,11 @@ const userAttemptSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Result to the solution must be provided!']
     },
-    // parentSolution: {
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: 'UserAttempt',
-    //   default: null
-    // },
+    parentSolution: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'UserAttempt',
+      default: null
+    },
     user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',

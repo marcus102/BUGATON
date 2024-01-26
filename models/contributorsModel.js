@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 
 const contributorSchema = new mongoose.Schema(
   {
-    parentContribution: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Contributor'
-    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -37,12 +33,6 @@ const contributorSchema = new mongoose.Schema(
     toObject: { virtuals: true }
   }
 );
-
-contributorSchema.virtual('childContributions', {
-  ref: 'Contributor',
-  localField: '_id',
-  foreignField: 'parentContribution'
-});
 
 contributorSchema.pre('findOneAndUpdate', function(next) {
   this.getUpdate().updatedAt = Date.now();
