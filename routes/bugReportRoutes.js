@@ -1,5 +1,4 @@
 const express = require('express');
-
 const commentsRouter = require('./commentsRoutes');
 const imageRouter = require('./imagesRoutes');
 const bugFixRouter = require('./bugFixesRoutes');
@@ -31,7 +30,6 @@ router
   .patch(bugReportController.updateBug)
   .delete(
     commentsController.deleteMultipleBugReportsCommentsById,
-    likesController.deleteMultiplebugReportsLikesById,
     imagesController.deletMultipleBugReportsImagesById,
     contributorsController.deleteMultipleContributionsById,
     bugFixesController.deleteMultipleBugFixesById,

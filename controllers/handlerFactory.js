@@ -293,3 +293,58 @@ exports.deleteArrayImages = (Model, field) =>
 
     next();
   });
+
+// const deleteArrayItems = (Model, field, additionalDeleteAction) =>
+//   catchAsync(async (req, res, next) => {
+//     const { ids } = req.body;
+
+//     if (!ids || !Array.isArray(ids) || ids.length === 0) {
+//       return next(appError('Invalid or empty array of IDs provided!', 400));
+//     }
+
+//     const itemsToDelete = await Model.aggregate([
+//       {
+//         $match: {
+//           [field]: { $in: ids.map(id => new mongoose.Types.ObjectId(id)) }
+//         }
+//       }
+//     ]);
+
+//     if (itemsToDelete.length === 0) {
+//       return next();
+//     }
+
+//     const itemIdsToDelete = itemsToDelete.map(item => item._id);
+
+//     try {
+//       if (additionalDeleteAction) {
+//         await additionalDeleteAction(itemsToDelete);
+//       }
+
+//       const deletionResult = await Model.deleteMany({
+//         _id: { $in: itemIdsToDelete }
+//       });
+
+//       if (!deletionResult.deletedCount > 0) {
+//         return next(appError('Failed to delete documents!', 500));
+//       }
+
+//       next();
+//     } catch (error) {
+//       return next(appError('Failed to delete items!', 500));
+//     }
+//   });
+
+// exports.deleteArray = (Model, field) => deleteArrayItems(Model, field, null);
+
+// exports.deleteArrayImages = (Model, field) =>
+//   deleteArrayItems(Model, field, async imageToDelete => {
+//     await Promise.all(
+//       imageToDelete.map(async image => {
+//         await fs.unlink(image.imageUrl, err => {
+//           if (err) throw err;
+//         });
+//         await Model.findByIdAndDelete(image._id);
+//       })
+//     );
+//   });
