@@ -17,6 +17,8 @@ router
   .route('/')
   .get(imagesController.getAllImages)
   .post(
+    imagesController.setRequiredIds,
+    imagesController.checkInfo,
     imagesController.uploadImage,
     imagesController.setRequiredIds,
     imagesController.createImage

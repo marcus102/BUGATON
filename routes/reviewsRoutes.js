@@ -10,7 +10,7 @@ router
   .route('/')
   .get(reviewController.getAllReviews)
   .post(
-    authenticatioController.restrictTo('user'),
+    authenticatioController.restrictTo('user', 'admin'),
     reviewController.setRequiredIds,
     reviewController.createReview
   );

@@ -46,3 +46,8 @@ exports.toggleLike = catchAsync(async (req, res, next) => {
 
 exports.getAllUsersThatLikePosts = factory.getAll(Like);
 exports.getUserThatLikePosts = factory.getOne(Like);
+exports.deleteMultiplebugFixesLikesById = factory.deleteMany(Like, 'bugFix');
+exports.deleteMultiplebugReportsLikesById = factory.deleteMany(
+  Like,
+  'bugReport'
+);

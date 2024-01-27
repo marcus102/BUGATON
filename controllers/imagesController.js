@@ -2,6 +2,9 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const Image = require('./../models/imagesModel');
+const BugReport = require('./../models/bugReportModel');
+const UserAttempt = require('./../models/bugFixesModel');
+const ReusableCode = require('./../models/reusableCodeModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./handlerFactory');
 const appError = require('../utils/appError');
@@ -30,27 +33,53 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+exports.checkInfo = catchAsync(async (req, res, next) => {
+  const { bugReport, reusableCode, bugFix } = req.body;
+
+  const bugReportDoc = await BugReport.findById(bugReport);
+  const bugFixDoc = await UserAttempt.findById(bugFix);
+  const reusableCodeDoc = await ReusableCode.findById(reusableCode);
+
+  if (!(bugReportDoc || bugFixDoc || reusableCodeDoc)) {
+    return next(appError('You cannot perform this action', 405));
+  }
+
+  next();
+});
+
 exports.uploadImage = upload.single('image');
 
 exports.createImage = catchAsync(async (req, res, next) => {
-  // Check if an image file was provided in the request
+  const {
+    caption,
+    tags,
+    likes,
+    privacy,
+    downloads,
+    user,
+    bugReport,
+    reusableCode,
+    bugFix
+  } = req.body;
+  const { mimetype, size } = req.file;
+
   if (!req.file) {
     return next(appError('No image file provided', 400));
   }
-  // Create a new Image document
+
   const newImage = await Image.create({
     imageUrl: path.join(__dirname, '..', 'assets', 'images', req.file.filename),
-    caption: req.body.caption,
-    tags: req.body.tags,
-    likes: req.body.likes,
-    privacy: req.body.privacy,
-    size: req.file.size,
-    fileFormat: req.file.mimetype,
-    downloads: req.body.downloads,
-    user: req.body.user,
-    bugReport: req.body.bugReport,
-    reusableCode: req.body.reusableCode,
-    bugFix: req.body.bugFix
+    caption: caption,
+    tags: tags,
+    likes: likes,
+    privacy: privacy,
+    size: size,
+    fileFormat: mimetype,
+    downloads: downloads,
+    user: user,
+    bugReport: bugReport,
+    reusableCode: reusableCode,
+    bugFix: bugFix
   });
 
   res.status(201).json({
@@ -126,6 +155,16 @@ exports.deleteImage = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.deletMultipleBugFixesImagesById = factory.deleteManyImages(
+  Image,
+  'bugFix'
+);
+
+exports.deletMultipleBugReportsImagesById = factory.deleteManyImages(
+  Image,
+  'bugReport'
+);
 
 exports.getAllImages = factory.getAll(Image);
 exports.getImage = factory.getOne(Image);

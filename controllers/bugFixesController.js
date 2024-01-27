@@ -51,6 +51,7 @@ exports.updateBugFix = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteBugFix = factory.deleteOne(BugFixes);
+exports.deleteMultipleBugFixesById = factory.deleteMany(BugFixes, 'bugReport');
 
 exports.getUserTotalBugFixes = catchAsync(async (req, res, next) => {
   const userId = req.body.user;

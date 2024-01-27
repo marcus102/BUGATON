@@ -62,7 +62,7 @@ commentSchema.pre(/^find/, function(next) {
     select: 'username profile'
   })
     .populate({
-      path: 'bug',
+      path: 'bugReport',
       select: 'title description'
     })
     .populate({

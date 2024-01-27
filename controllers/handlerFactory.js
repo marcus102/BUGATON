@@ -1,3 +1,6 @@
+// const path = require('path');
+const mongoose = require('mongoose');
+const fs = require('fs');
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const appError = require('./../utils/appError');
@@ -23,7 +26,7 @@ exports.updateOne = Model =>
       runValidators: true
     });
     if (!doc) {
-      return next(appError('No document found with that ID! ', 404));
+      return next(appError('No document found with that ID!', 404));
     }
     res.status(200).json({
       status: 'success',
@@ -141,4 +144,75 @@ exports.handleAssignment = (operation, userDB, bugReportDB) =>
       status: 'success',
       data: updatedBug
     });
+  });
+
+exports.deleteMany = (Model, field) =>
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!id) {
+      return next(appError('Something went wrong! ID not found!', 404));
+    }
+
+    const contributionsToDelete = await Model.aggregate([
+      {
+        $match: {
+          [field]: new mongoose.Types.ObjectId(id)
+        }
+      }
+    ]);
+
+    if (contributionsToDelete.length === 0) {
+      return next();
+    }
+
+    const contributionIdsToDelete = contributionsToDelete.map(
+      contribution => contribution._id
+    );
+
+    const deletionResult = await Model.deleteMany({
+      _id: { $in: contributionIdsToDelete }
+    });
+
+    if (!deletionResult.deletedCount > 0) {
+      return next(appError('Failed to delete documents!', 500));
+    }
+
+    next();
+  });
+
+exports.deleteManyImages = (Model, field) =>
+  catchAsync(async (req, res, next) => {
+    const { id } = req.params;
+
+    if (!id) {
+      return next(appError('Something went wrong! ID not found!', 404));
+    }
+
+    const imagesToDelete = await Model.aggregate([
+      {
+        $match: {
+          [field]: new mongoose.Types.ObjectId(id)
+        }
+      }
+    ]);
+
+    if (imagesToDelete.length === 0) {
+      return next();
+    }
+
+    try {
+      await Promise.all(
+        imagesToDelete.map(async image => {
+          await fs.unlink(image.imageUrl, err => {
+            if (err) throw err;
+          });
+          await Model.findByIdAndDelete(image._id);
+        })
+      );
+    } catch (error) {
+      return next(appError('Failed to delete images!', 500));
+    }
+
+    next();
   });

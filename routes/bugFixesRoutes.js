@@ -1,10 +1,14 @@
 const express = require('express');
 const commentsRouter = require('./commentsRoutes');
+const commentsController = require('./../controllers/commentsControllers');
 const reviewRouter = require('./reviewsRoutes');
 const imageRouter = require('./imagesRoutes');
 const likesRouter = require('./likeRoutes');
 const authenticatioController = require('../controllers/authenticatioController');
 const bugFixesController = require('../controllers/bugFixesController');
+const likesController = require('./../controllers/likesController');
+const imagesController = require('./../controllers/imagesController');
+const reviewsController = require('./../controllers/reviewsController');
 
 const router = express.Router({ mergeParams: true });
 
@@ -31,6 +35,12 @@ router
   .post(bugFixesController.setRequiredIds, bugFixesController.createBugFix)
   .get(bugFixesController.getBugFix)
   .patch(bugFixesController.updateBugFix)
-  .delete(bugFixesController.deleteBugFix);
+  .delete(
+    commentsController.deleteMultipleBugFixesCommentsById,
+    reviewsController.deleteMultiplebugFixesReviewsById,
+    likesController.deleteMultiplebugFixesLikesById,
+    imagesController.deletMultipleBugFixesImagesById,
+    bugFixesController.deleteBugFix
+  );
 
 module.exports = router;
