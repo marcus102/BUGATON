@@ -51,3 +51,8 @@ exports.deleteMultiplebugReportsLikesById = factory.deleteMany(
   Like,
   'bugReport'
 );
+
+exports.deleteMultiplebugFixesLikesByArraysOfIds = factory.deleteArray(
+  Like,
+  'bugFix'
+);

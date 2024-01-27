@@ -50,3 +50,8 @@ exports.deleteMultipleBugReportsCommentsById = factory.deleteMany(
   Comment,
   'bugReport'
 );
+
+exports.deleteMultipleBugFixesCommentsByArraysOfIds = factory.deleteArray(
+  Comment,
+  'bugFix'
+);

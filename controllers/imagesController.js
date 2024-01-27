@@ -23,7 +23,7 @@ exports.setRequiredIds = (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, './../BUGATON/assets/images'); // Specify the destination folder
+    cb(null, './../BUGATON/assets/images');
   },
   filename: function(req, file, cb) {
     // Use the current timestamp as the file name to make it unique
@@ -164,6 +164,11 @@ exports.deletMultipleBugFixesImagesById = factory.deleteManyImages(
 exports.deletMultipleBugReportsImagesById = factory.deleteManyImages(
   Image,
   'bugReport'
+);
+
+exports.deletMultipleBugFixesImagesByArraysOfIds = factory.deleteArrayImages(
+  Image,
+  'bugFix'
 );
 
 exports.getAllImages = factory.getAll(Image);

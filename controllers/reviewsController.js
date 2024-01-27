@@ -20,3 +20,8 @@ exports.deleteMultiplebugFixesReviewsById = factory.deleteMany(
   Review,
   'bugFix'
 );
+
+exports.deleteMultiplebugFixesReviewsByArrayOfIds = factory.deleteArray(
+  Review,
+  'bugFix'
+);

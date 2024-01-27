@@ -1,14 +1,16 @@
 const express = require('express');
-const bugReportController = require('../controllers/bugReportController');
+
 const commentsRouter = require('./commentsRoutes');
-const commentsController = require('./../controllers/commentsControllers');
 const imageRouter = require('./imagesRoutes');
-const imagesController = require('./../controllers/imagesController');
-const likesController = require('./../controllers/likesController');
-const authenticatioController = require('../controllers/authenticatioController');
 const bugFixRouter = require('./bugFixesRoutes');
 const bugFixesController = require('../controllers/bugFixesController');
 const contributorsController = require('./../controllers/contributorsController');
+const imagesController = require('./../controllers/imagesController');
+const likesController = require('./../controllers/likesController');
+const authenticatioController = require('../controllers/authenticatioController');
+const commentsController = require('./../controllers/commentsControllers');
+const bugReportController = require('../controllers/bugReportController');
+const reviewsController = require('./../controllers/reviewsController');
 
 const router = express.Router({ mergeParams: true });
 
@@ -28,14 +30,15 @@ router
   .get(bugReportController.getBug)
   .patch(bugReportController.updateBug)
   .delete(
-    commentsController.deleteMultipleBugFixesCommentsById,
     commentsController.deleteMultipleBugReportsCommentsById,
-    likesController.deleteMultiplebugFixesLikesById,
     likesController.deleteMultiplebugReportsLikesById,
-    imagesController.deletMultipleBugFixesImagesById,
     imagesController.deletMultipleBugReportsImagesById,
     contributorsController.deleteMultipleContributionsById,
     bugFixesController.deleteMultipleBugFixesById,
+    commentsController.deleteMultipleBugFixesCommentsByArraysOfIds,
+    likesController.deleteMultiplebugFixesLikesByArraysOfIds,
+    imagesController.deletMultipleBugFixesImagesByArraysOfIds,
+    reviewsController.deleteMultiplebugFixesReviewsByArrayOfIds,
     bugReportController.deleteBug
   );
 

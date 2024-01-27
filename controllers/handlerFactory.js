@@ -1,4 +1,3 @@
-// const path = require('path');
 const mongoose = require('mongoose');
 const fs = require('fs');
 const APIFeatures = require('./../utils/apiFeatures');
@@ -146,7 +145,7 @@ exports.handleAssignment = (operation, userDB, bugReportDB) =>
     });
   });
 
-exports.deleteMany = (Model, field) =>
+exports.deleteMany = (Model, field, setIds) =>
   catchAsync(async (req, res, next) => {
     const { id } = req.params;
 
@@ -154,7 +153,7 @@ exports.deleteMany = (Model, field) =>
       return next(appError('Something went wrong! ID not found!', 404));
     }
 
-    const contributionsToDelete = await Model.aggregate([
+    const docToDelete = await Model.aggregate([
       {
         $match: {
           [field]: new mongoose.Types.ObjectId(id)
@@ -162,16 +161,25 @@ exports.deleteMany = (Model, field) =>
       }
     ]);
 
-    if (contributionsToDelete.length === 0) {
+    if (docToDelete.length === 0) {
       return next();
     }
 
-    const contributionIdsToDelete = contributionsToDelete.map(
-      contribution => contribution._id
-    );
+    if (setIds && setIds === true) {
+      const bugFixIds = docToDelete.reduce((acc, doc) => {
+        if (doc._id) {
+          acc.push(doc._id);
+        }
+        return acc;
+      }, []);
+
+      req.body.ids = bugFixIds;
+    }
+
+    const docIdsToDelete = docToDelete.map(doc => doc._id);
 
     const deletionResult = await Model.deleteMany({
-      _id: { $in: contributionIdsToDelete }
+      _id: { $in: docIdsToDelete }
     });
 
     if (!deletionResult.deletedCount > 0) {
@@ -204,6 +212,75 @@ exports.deleteManyImages = (Model, field) =>
     try {
       await Promise.all(
         imagesToDelete.map(async image => {
+          await fs.unlink(image.imageUrl, err => {
+            if (err) throw err;
+          });
+          await Model.findByIdAndDelete(image._id);
+        })
+      );
+    } catch (error) {
+      return next(appError('Failed to delete images!', 500));
+    }
+
+    next();
+  });
+
+exports.deleteArray = (Model, field) =>
+  catchAsync(async (req, res, next) => {
+    const { ids } = req.body;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return next(appError('Invalid or empty array of IDs provided!', 400));
+    }
+
+    const docToDelete = await Model.aggregate([
+      {
+        $match: {
+          [field]: { $in: ids.map(id => new mongoose.Types.ObjectId(id)) }
+        }
+      }
+    ]);
+
+    if (docToDelete.length === 0) {
+      return next();
+    }
+
+    const docIdsToDelete = docToDelete.map(doc => doc._id);
+
+    const deletionResult = await Model.deleteMany({
+      _id: { $in: docIdsToDelete }
+    });
+
+    if (!deletionResult.deletedCount > 0) {
+      return next(appError('Failed to delete documents!', 500));
+    }
+
+    next();
+  });
+
+exports.deleteArrayImages = (Model, field) =>
+  catchAsync(async (req, res, next) => {
+    const { ids } = req.body;
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return next(appError('Invalid or empty array of IDs provided!', 400));
+    }
+
+    const imageToDelete = await Model.aggregate([
+      {
+        $match: {
+          [field]: { $in: ids.map(id => new mongoose.Types.ObjectId(id)) }
+        }
+      }
+    ]);
+
+    if (imageToDelete.length === 0) {
+      return next();
+    }
+
+    try {
+      await Promise.all(
+        imageToDelete.map(async image => {
           await fs.unlink(image.imageUrl, err => {
             if (err) throw err;
           });
