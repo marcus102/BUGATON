@@ -56,6 +56,10 @@ app.use(`${rootUrl}/social/share`, socialRouter);
 app.use(`${rootUrl}/training`, trainingRouter);
 app.use(`${rootUrl}/collaboration/slack`, collaborationRouter);
 
+// app.post('/hey', (req, res) => {
+//   res.sendStatus(201);
+// });
+
 app.all('*', (req, res, next) => {
   next(
     appError(`Sorry!!! cannot find ${req.originalUrl} on this server!`, 404)

@@ -28,6 +28,10 @@ const bugReportSchema = new mongoose.Schema(
         'Provide the actual behavior to help users understand more'
       ]
     },
+    bug: {
+      type: String,
+      required: [true, 'The bugis required!']
+    },
     browser: {
       type: String,
       enum: [
