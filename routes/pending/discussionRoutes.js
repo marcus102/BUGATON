@@ -1,5 +1,5 @@
 const express = require('express');
-const discussionController = require('../controllers/discussionController');
+const discussionController = require('../../controllers/pending/discussionController');
 
 const router = express.Router();
 

@@ -1,5 +1,5 @@
 const express = require('express');
-const collaborationController = require('../controllers/collaborationController');
+const collaborationController = require('../../controllers/pending/collaborationController');
 
 const router = express.Router();
 
