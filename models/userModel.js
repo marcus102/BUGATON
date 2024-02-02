@@ -43,16 +43,16 @@ const userSchema = new mongoose.Schema(
         message: 'Please provide a valid phone number!'
       }
     },
-    profile: {
-      type: String,
-      default: null
-    },
-    images: [
-      {
-        type: String,
-        default: []
-      }
-    ],
+    // profile: {
+    //   type: String,
+    //   default: null
+    // },
+    // images: [
+    //   {
+    //     type: String,
+    //     default: []
+    //   }
+    // ],
     followersCount: {
       type: Number,
       default: 0
@@ -82,12 +82,12 @@ const userSchema = new mongoose.Schema(
       ],
       default: 'user'
     },
-    zoneOfInterests: [
-      {
-        type: String,
-        default: []
-      }
-    ],
+    // zoneOfInterests: [
+    //   {
+    //     type: String,
+    //     default: []
+    //   }
+    // ],
     links: [
       {
         type: String,
@@ -103,7 +103,8 @@ const userSchema = new mongoose.Schema(
       default: null
     },
     location: {
-      type: String
+      type: String,
+      default: null
     },
     password: {
       type: String,

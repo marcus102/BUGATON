@@ -1,7 +1,7 @@
-const Contributor = require('./../models/contributorsModel');
-const factory = require('./handlerFactory');
-const catchAsync = require('../utils/catchAsync');
-const appError = require('./../utils/appError');
+const Contributor = require('../../models/user_engagement/contributorsModel');
+const factory = require('../handlerFactory');
+const catchAsync = require('../../utils/catchAsync');
+const appError = require('../../utils/appError');
 
 exports.setRequiredIds = (req, res, next) => {
   const setIfUndefined = (field, value) => {

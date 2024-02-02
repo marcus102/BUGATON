@@ -1,9 +1,9 @@
-const Like = require('./../models/likesModel');
-const BugFixes = require('./../models/bugFixesModel');
-const ReusableCode = require('./../models/reusableCodeModel');
-const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlerFactory');
-const appError = require('./../utils/appError');
+const Like = require('../../models/user_engagement/likesModel');
+const BugFixes = require('../../models/bugFixesModel');
+const ReusableCode = require('../../models/reusableCodeModel');
+const catchAsync = require('../../utils/catchAsync');
+const factory = require('../handlerFactory');
+const appError = require('../../utils/appError');
 
 exports.setRequiredIds = (req, res, next) => {
   const setIfUndefined = (field, value) => {

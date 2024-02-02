@@ -1,6 +1,6 @@
 const express = require('express');
-const likesController = require('./../controllers/likesController');
-const authenticatioController = require('./../controllers/authenticatioController');
+const likesController = require('../../controllers/user_engagement/likesController');
+const authenticatioController = require('../../controllers/authenticatioController');
 
 const router = express.Router({ mergeParams: true });
 

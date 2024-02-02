@@ -2,8 +2,8 @@ const express = require('express');
 const reusableCodeController = require('./../controllers/reusableCodeControllerjs');
 const authenticatioController = require('./../controllers/authenticatioController');
 const imageRouter = require('./imagesRoutes');
-const commentRouter = require('./commentsRoutes');
-const likesRouter = require('./likeRoutes');
+const commentRouter = require('./user_engagement/commentsRoutes');
+const likesRouter = require('./user_engagement/likeRoutes');
 
 const router = express.Router({ mergeParams: true });
 

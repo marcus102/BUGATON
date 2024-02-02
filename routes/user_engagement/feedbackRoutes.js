@@ -1,6 +1,6 @@
 const express = require('express');
-const feedbackController = require('./../controllers/feedbackController');
-const authenticatioController = require('./../controllers/authenticatioController');
+const feedbackController = require('../../controllers/user_engagement/feedbackController');
+const authenticatioController = require('../../controllers/authenticatioController');
 
 const router = express.Router({ mergeParams: true });
 

@@ -1,15 +1,15 @@
 const express = require('express');
-const commentsRouter = require('./commentsRoutes');
+const commentsRouter = require('./user_engagement/commentsRoutes');
 const imageRouter = require('./imagesRoutes');
 const bugFixRouter = require('./bugFixesRoutes');
 const bugFixesController = require('../controllers/bugFixesController');
-const contributorsController = require('./../controllers/contributorsController');
+const contributorsController = require('../controllers/user_engagement/contributorsController');
 const imagesController = require('./../controllers/imagesController');
-const likesController = require('./../controllers/likesController');
+const likesController = require('../controllers/user_engagement/likesController');
 const authenticatioController = require('../controllers/authenticatioController');
-const commentsController = require('./../controllers/commentsControllers');
+const commentsController = require('../controllers/user_engagement/commentsControllers');
 const bugReportController = require('../controllers/bugReportController');
-const reviewsController = require('./../controllers/reviewsController');
+const reviewsController = require('../controllers/user_engagement/reviewsController');
 
 const router = express.Router({ mergeParams: true });
 

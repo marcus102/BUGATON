@@ -1,5 +1,5 @@
-const Feedback = require('./../models/feedbackModel');
-const factory = require('./handlerFactory');
+const Feedback = require('../../models/user_engagement/feedbackModel');
+const factory = require('../handlerFactory');
 
 exports.setRequiredIds = (req, res, next) => {
   const setIfUndefined = (field, value) => {

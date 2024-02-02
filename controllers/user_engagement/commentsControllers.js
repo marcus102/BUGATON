@@ -1,7 +1,7 @@
-const appError = require('../utils/appError');
-const Comment = require('./../models/commentModel');
-const factory = require('./handlerFactory');
-const catchAsync = require('../utils/catchAsync');
+const appError = require('../../utils/appError');
+const Comment = require('../../models/user_engagement/commentModel');
+const factory = require('../handlerFactory');
+const catchAsync = require('../../utils/catchAsync');
 
 exports.setRequiredIds = (req, res, next) => {
   const setIfUndefined = (field, value) => {

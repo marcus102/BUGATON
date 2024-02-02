@@ -10,9 +10,9 @@ const collaborationSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    category: {
-      type: String
-    },
+    // category: {
+    //   type: String
+    // },
     targetAudience: {
       type: String
     },

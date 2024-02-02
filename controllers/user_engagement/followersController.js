@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
-const appError = require('../utils/appError');
-const catchAsync = require('./../utils/catchAsync');
-const User = require('./../models/userModel');
-const Follower = require('./../models/followersModel');
-const factory = require('./handlerFactory');
+const appError = require('../../utils/appError');
+const catchAsync = require('../../utils/catchAsync');
+const User = require('../../models/userModel');
+const Follower = require('../../models/user_engagement/followersModel');
+const factory = require('../handlerFactory');
 
 exports.setRequiredIds = (req, res, next) => {
   const setIfUndefined = (field, value) => {

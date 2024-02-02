@@ -5,24 +5,25 @@ const globalErrorHandler = require('./controllers/errorsController');
 const appError = require('./utils/appError');
 const bugReportRouter = require('./routes/bugReportRoutes');
 const userRouter = require('./routes/userRoutes');
-const reviewRouter = require('./routes/reviewsRoutes');
+const reviewRouter = require('./routes/user_engagement/reviewsRoutes');
 const analyticsRouter = require('./routes/analyticsRoutes');
 const apiIntegrationsRouter = require('./routes/apiIntegrationsRoutes');
 const collaborationRouter = require('./routes/collaborationRoutes');
 const discussionRouter = require('./routes/discussionRoutes');
 const docsRouter = require('./routes/docsRoutes');
 const eventRouter = require('./routes/eventRoutes');
-const feedbackRouter = require('./routes/feedbackRoutes');
+const feedbackRouter = require('./routes/user_engagement/feedbackRoutes');
 const searchRouter = require('./routes/searchRoutes');
 const socialRouter = require('./routes/socialRoutes');
 const trainingRouter = require('./routes/trainingRoutes');
-const commentRouter = require('./routes/commentsRoutes');
+const commentRouter = require('./routes/user_engagement/commentsRoutes');
 const imageRouter = require('./routes/imagesRoutes');
 const reusableCodeRouter = require('./routes/reusableCodeRoutes');
 const bugFixRouter = require('./routes/bugFixesRoutes');
-const likesRouter = require('./routes/likeRoutes');
-const followersRouter = require('./routes/followersRoutes');
-const contributorsRouter = require('./routes/contributorsRoutes');
+const likesRouter = require('./routes/user_engagement/likeRoutes');
+const followersRouter = require('./routes/user_engagement/followersRoutes');
+const contributorsRouter = require('./routes/user_engagement/contributorsRoutes');
+const blogRouter = require('./routes/blogRoutes');
 
 const app = express();
 
@@ -45,6 +46,7 @@ app.use(`${rootUrl}/feedbacks`, feedbackRouter);
 app.use(`${rootUrl}/likes`, likesRouter);
 app.use(`${rootUrl}/followers`, followersRouter);
 app.use(`${rootUrl}/contributors`, contributorsRouter);
+app.use(`${rootUrl}/blogs`, blogRouter);
 app.use(`${rootUrl}/events`, eventRouter);
 app.use(`${rootUrl}/discussions`, discussionRouter);
 app.use(`${rootUrl}/integrations`, apiIntegrationsRouter);
@@ -55,10 +57,6 @@ app.use(`${rootUrl}/resources`, docsRouter);
 app.use(`${rootUrl}/social/share`, socialRouter);
 app.use(`${rootUrl}/training`, trainingRouter);
 app.use(`${rootUrl}/collaboration/slack`, collaborationRouter);
-
-// app.post('/hey', (req, res) => {
-//   res.sendStatus(201);
-// });
 
 app.all('*', (req, res, next) => {
   next(
