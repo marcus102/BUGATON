@@ -122,6 +122,10 @@ const imageSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'UserAttempt'
     },
+    blogPost: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Blog'
+    },
     createdAt: {
       type: Date,
       default: Date.now()

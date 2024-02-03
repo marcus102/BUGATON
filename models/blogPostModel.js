@@ -11,6 +11,11 @@ const blogSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: [true, 'Bug solution must have a user']
+  },
   // images: [
   //   {
   //     type: String,

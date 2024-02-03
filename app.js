@@ -23,7 +23,8 @@ const bugFixRouter = require('./routes/bugFixesRoutes');
 const likesRouter = require('./routes/user_engagement/likeRoutes');
 const followersRouter = require('./routes/user_engagement/followersRoutes');
 const contributorsRouter = require('./routes/user_engagement/contributorsRoutes');
-const blogRouter = require('./routes/blogRoutes');
+const blogRouter = require('./routes/blogPostRoutes');
+const categoriesRouter = require('./routes/filtering/categoriesRoutes');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use(`${rootUrl}/likes`, likesRouter);
 app.use(`${rootUrl}/followers`, followersRouter);
 app.use(`${rootUrl}/contributors`, contributorsRouter);
 app.use(`${rootUrl}/blogs`, blogRouter);
+app.use(`${rootUrl}/categories`, categoriesRouter);
 app.use(`${rootUrl}/events`, eventRouter);
 app.use(`${rootUrl}/discussions`, discussionRouter);
 app.use(`${rootUrl}/integrations`, apiIntegrationsRouter);
