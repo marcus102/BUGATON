@@ -25,6 +25,9 @@ const followersRouter = require('./routes/user_engagement/followersRoutes');
 const contributorsRouter = require('./routes/user_engagement/contributorsRoutes');
 const blogRouter = require('./routes/blogPostRoutes');
 const categoriesRouter = require('./routes/filtering/categoriesRoutes');
+const operatingSystemRouter = require('./routes/filtering/operatingSystemRoutes');
+const programmingLanguagesRouter = require('./routes/filtering/programmingLanguagesRoutes');
+const zoneOfInterestRouter = require('./routes/filtering/zoneOfInterestRoutes');
 
 const app = express();
 
@@ -49,6 +52,9 @@ app.use(`${rootUrl}/followers`, followersRouter);
 app.use(`${rootUrl}/contributors`, contributorsRouter);
 app.use(`${rootUrl}/blogs`, blogRouter);
 app.use(`${rootUrl}/categories`, categoriesRouter);
+app.use(`${rootUrl}/operating_systems`, operatingSystemRouter);
+app.use(`${rootUrl}/programming_languages`, programmingLanguagesRouter);
+app.use(`${rootUrl}/zone_of_interests`, zoneOfInterestRouter);
 app.use(`${rootUrl}/events`, eventRouter);
 app.use(`${rootUrl}/discussions`, discussionRouter);
 app.use(`${rootUrl}/integrations`, apiIntegrationsRouter);

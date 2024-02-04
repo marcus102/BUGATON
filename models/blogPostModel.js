@@ -3,18 +3,18 @@ const mongoose = require('mongoose');
 const blogSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: [true, 'Blog post title is required!'],
     minlength: 3,
     maxlength: 255
   },
   content: {
     type: String,
-    required: true
+    required: [true, 'Blog post Content is required!']
   },
   user: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    required: [true, 'Bug solution must have a user']
+    required: [true, 'Blog post must have a user']
   },
   // images: [
   //   {
@@ -34,7 +34,7 @@ const blogSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['draft', 'published'],
+    enum: ['draft', 'pending', 'rejected', 'published'],
     default: 'draft'
   },
   // categories: [
@@ -55,11 +55,11 @@ const blogSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   updatedAt: {
     type: Date,
-    default: Date.now
+    default: null
   }
 });
 

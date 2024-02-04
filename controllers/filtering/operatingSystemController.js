@@ -1,11 +1,11 @@
-const OsPlatform = require('./../../models/filtering/osPlatformModel');
-const BugReport = require('./../../models/bugReportModel');
-const UserAttempt = require('./../../models/bugFixesModel');
-const ReusableCode = require('./../../models/reusableCodeModel');
-const Blog = require('./../../models/blogPostModel');
-const factory = require('./../handlerFactory');
-const catchAsync = require('./../../utils/catchAsync');
-const appError = require('./../../utils/appError');
+const OperatingSystem = require('../../models/filtering/operatingSystemModel');
+const BugReport = require('../../models/bugReportModel');
+const UserAttempt = require('../../models/bugFixesModel');
+const ReusableCode = require('../../models/reusableCodeModel');
+const Blog = require('../../models/blogPostModel');
+const factory = require('../handlerFactory');
+const catchAsync = require('../../utils/catchAsync');
+const appError = require('../../utils/appError');
 
 exports.setRequiredIds = (req, res, next) => {
   const setIfUndefined = (field, value) => {
@@ -42,11 +42,11 @@ exports.createOsPlatform = catchAsync(async (req, res, next) => {
     bugFix,
     reusableCode,
     blogPost,
-    osPlatform
+    operatingSystem
   } = req.body;
 
-  const newOsPlatform = await OsPlatform.create({
-    osPlatform: osPlatform,
+  const newOsPlatform = await OperatingSystem.create({
+    operatingSystem: operatingSystem,
     user: user,
     bugReport: bugReport,
     bugFix: bugFix,
@@ -59,10 +59,20 @@ exports.createOsPlatform = catchAsync(async (req, res, next) => {
     data: newOsPlatform
   });
 });
-exports.getAllOsPlatforms = factory.getAll(OsPlatform);
-exports.getOsPlatform = factory.getOne(OsPlatform);
-exports.updateOsPlatform = factory.updateOne(OsPlatform);
+exports.getAllOsPlatforms = factory.getAll(OperatingSystem);
+exports.getOsPlatform = factory.getOne(OperatingSystem);
+exports.updateOsPlatform = factory.updateOne(OperatingSystem);
+exports.deleteOsPlatform = factory.deleteOne(OperatingSystem);
 
-exports.deleteOsPlatform = catchAsync(async (req, res, next) => {
-  return appError('You are not allowed to delete os platform', 500);
-});
+exports.deleteMultipleBugReportOsPlatformById = factory.deleteMany(
+  OperatingSystem,
+  'bugReport'
+);
+exports.deleteMultipleReusableCodeOsPlatformById = factory.deleteMany(
+  OperatingSystem,
+  'reusableCode'
+);
+exports.deleteMultipleBlogPostOsPlatformById = factory.deleteMany(
+  OperatingSystem,
+  'blogPost'
+);

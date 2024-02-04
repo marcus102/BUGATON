@@ -25,7 +25,11 @@ exports.getBug = factory.getOne(BugReport, [
   { path: 'userAttempts' },
   { path: 'image' },
   { path: 'contributors' },
-  { path: 'comments' }
+  { path: 'comments' },
+  { path: 'categories' },
+  { path: 'operatingSystem' },
+  { path: 'programmingLanguages' },
+  { path: 'zoneOfInterests' }
 ]);
 exports.updateBug = factory.updateOne(BugReport);
 exports.deleteBug = factory.deleteOne(BugReport);

@@ -42,11 +42,11 @@ exports.createLanguage = catchAsync(async (req, res, next) => {
     bugFix,
     reusableCode,
     blogPost,
-    languages
+    language
   } = req.body;
 
   const newLanguage = await Language.create({
-    languages: languages,
+    language: language,
     user: user,
     bugReport: bugReport,
     bugFix: bugFix,
@@ -62,7 +62,17 @@ exports.createLanguage = catchAsync(async (req, res, next) => {
 exports.getAllLanguages = factory.getAll(Language);
 exports.getLanguage = factory.getOne(Language);
 exports.updateLanguage = factory.updateOne(Language);
+exports.deleteLanguage = factory.deleteOne(Language);
 
-exports.deleteLanguage = catchAsync(async (req, res, next) => {
-  return appError('You are not allowed to delete language', 500);
-});
+exports.deleteMultipleBugReportLanguageById = factory.deleteMany(
+  Language,
+  'bugReport'
+);
+exports.deleteMultipleReusableCodeLanguageById = factory.deleteMany(
+  Language,
+  'reusableCode'
+);
+exports.deleteMultipleBlogPostLanguageById = factory.deleteMany(
+  Language,
+  'blogPost'
+);

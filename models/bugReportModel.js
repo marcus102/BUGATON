@@ -30,7 +30,7 @@ const bugReportSchema = new mongoose.Schema(
     },
     bug: {
       type: String,
-      required: [true, 'The bugis required!']
+      required: [true, 'The bug is required!']
     },
     browser: {
       type: String,
@@ -46,19 +46,19 @@ const bugReportSchema = new mongoose.Schema(
       ],
       default: 'Other'
     },
-    operatingSystem: {
-      type: String,
-      enum: [
-        'Windows',
-        'macOS',
-        'Linux',
-        'iOS',
-        'Android',
-        'Windows Phone',
-        'Other'
-      ],
-      default: 'Other'
-    },
+    // operatingSystem: {
+    //   type: String,
+    //   enum: [
+    //     'Windows',
+    //     'macOS',
+    //     'Linux',
+    //     'iOS',
+    //     'Android',
+    //     'Windows Phone',
+    //     'Other'
+    //   ],
+    //   default: 'Other'
+    // },
     device: {
       type: String,
       enum: [
@@ -106,12 +106,12 @@ const bugReportSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    zoneOfInterests: [
-      {
-        type: String,
-        default: null
-      }
-    ],
+    // zoneOfInterests: [
+    //   {
+    //     type: String,
+    //     default: null
+    //   }
+    // ],
     createdAt: {
       type: Date,
       default: Date.now()
@@ -154,6 +154,30 @@ bugReportSchema.virtual('image', {
 
 bugReportSchema.virtual('comments', {
   ref: 'Comment',
+  localField: '_id',
+  foreignField: 'bugReport'
+});
+
+bugReportSchema.virtual('categories', {
+  ref: 'Category',
+  localField: '_id',
+  foreignField: 'bugReport'
+});
+
+bugReportSchema.virtual('operatingSystem', {
+  ref: 'OperatingSystem',
+  localField: '_id',
+  foreignField: 'bugReport'
+});
+
+bugReportSchema.virtual('programmingLanguages', {
+  ref: 'Language',
+  localField: '_id',
+  foreignField: 'bugReport'
+});
+
+bugReportSchema.virtual('zoneOfInterests', {
+  ref: 'ZoneOfInterest',
   localField: '_id',
   foreignField: 'bugReport'
 });

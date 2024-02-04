@@ -146,6 +146,30 @@ userAttemptSchema.virtual('image', {
   foreignField: 'bugFix'
 });
 
+userAttemptSchema.virtual('categories', {
+  ref: 'Category',
+  localField: 'bugReport',
+  foreignField: 'bugReport'
+});
+
+userAttemptSchema.virtual('operatingSystem', {
+  ref: 'OperatingSystem',
+  localField: 'bugReport',
+  foreignField: 'bugReport'
+});
+
+userAttemptSchema.virtual('programmingLanguages', {
+  ref: 'Language',
+  localField: 'bugReport',
+  foreignField: 'bugReport'
+});
+
+userAttemptSchema.virtual('zoneOfInterests', {
+  ref: 'ZoneOfInterest',
+  localField: 'bugReport',
+  foreignField: 'bugReport'
+});
+
 userAttemptSchema.virtual('comments', {
   ref: 'Comment',
   localField: '_id',

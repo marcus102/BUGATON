@@ -2,23 +2,22 @@ const mongoose = require('mongoose');
 
 const zoneOfInterestSchema = new mongoose.Schema(
   {
-    zoneOfInterest: [
-      {
-        type: String,
-        enum: [
-          'education',
-          'technology',
-          'programming',
-          'networking',
-          'data Science',
-          'security',
-          'artificial Intelligence',
-          'web Development',
-          'other'
-        ],
-        default: 'other'
-      }
-    ],
+    zoneOfInterest: {
+      type: String,
+      enum: [
+        'education',
+        'technology',
+        'programming',
+        'networking',
+        'data Science',
+        'security',
+        'artificial Intelligence',
+        'web Development',
+        'other',
+        'all'
+      ],
+      default: 'all'
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

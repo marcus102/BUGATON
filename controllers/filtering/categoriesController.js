@@ -13,13 +13,11 @@ exports.setRequiredIds = (req, res, next) => {
   };
   setIfUndefined('user', req.user.id);
   setIfUndefined('bugReport', req.params.bug_id);
-  setIfUndefined('bugFix', req.params.bug_fixes_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
   setIfUndefined('blogPost', req.params.blog_post_id);
 
   next();
 };
-
 exports.checkInfo = catchAsync(async (req, res, next) => {
   const { bugReport, reusableCode, bugFix, blogPost } = req.body;
 
@@ -34,7 +32,6 @@ exports.checkInfo = catchAsync(async (req, res, next) => {
 
   next();
 });
-
 exports.createCategory = catchAsync(async (req, res, next) => {
   const {
     user,
@@ -59,11 +56,21 @@ exports.createCategory = catchAsync(async (req, res, next) => {
     data: newCategory
   });
 });
+
 exports.getAllCategories = factory.getAll(Category);
 exports.getCategory = factory.getOne(Category);
 exports.updateCategory = factory.updateOne(Category);
-// exports.deleteCategory = factory.deleteOne(Category);
+exports.deleteCategory = factory.deleteOne(Category);
 
-exports.deleteCategory = catchAsync(async (req, res, next) => {
-  return appError('You are not allowed to delete categories', 500);
-});
+exports.deleteMultipleBugReportCategoriesById = factory.deleteMany(
+  Category,
+  'bugReport'
+);
+exports.deleteMultipleReusableCodeCategoriesById = factory.deleteMany(
+  Category,
+  'reusableCode'
+);
+exports.deleteMultipleBlogPostCategoriesById = factory.deleteMany(
+  Category,
+  'blogPost'
+);

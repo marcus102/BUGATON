@@ -1,23 +1,21 @@
 const mongoose = require('mongoose');
 
-const osPaltformSchema = new mongoose.Schema(
+const operatingSystemSchema = new mongoose.Schema(
   {
-    osPlatform: [
-      {
-        type: String,
-        enum: [
-          'android',
-          'cross-platform',
-          'ios',
-          'linux',
-          'macOS',
-          'web',
-          'windows',
-          'other'
-        ],
-        default: 'other'
-      }
-    ],
+    operatingSystem: {
+      type: String,
+      enum: [
+        'android',
+        'cross-platform',
+        'ios',
+        'linux',
+        'macOS',
+        'windows',
+        'other',
+        'all'
+      ],
+      default: 'all'
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
@@ -50,6 +48,9 @@ const osPaltformSchema = new mongoose.Schema(
   }
 );
 
-const OsPlatform = mongoose.model('OsPlatform', osPaltformSchema);
+const OperatingSystem = mongoose.model(
+  'OperatingSystem',
+  operatingSystemSchema
+);
 
-module.exports = OsPlatform;
+module.exports = OperatingSystem;

@@ -68,7 +68,11 @@ exports.getBugFix = factory.getOne(BugFixes, [
   { path: 'reviews' },
   { path: 'comments' },
   { path: 'childSolutions' },
-  { path: 'contributors' }
+  { path: 'contributors' },
+  { path: 'categories' },
+  { path: 'operatingSystem' },
+  { path: 'programmingLanguages' },
+  { path: 'zoneOfInterests' }
 ]);
 
 exports.updateBugFix = catchAsync(async (req, res, next) => {

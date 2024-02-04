@@ -59,10 +59,21 @@ exports.createZoneOfInterest = catchAsync(async (req, res, next) => {
     data: newZoneOfInterest
   });
 });
+
 exports.getAllZoneOfInterests = factory.getAll(ZoneOfInterest);
 exports.getZoneOfInterest = factory.getOne(ZoneOfInterest);
 exports.updateLZoneOfInterest = factory.updateOne(ZoneOfInterest);
+exports.deleteZoneOfInterest = factory.deleteOne(ZoneOfInterest);
 
-exports.deleteZoneOfInterest = catchAsync(async (req, res, next) => {
-  return appError('You are not allowed to delete zone of interest', 500);
-});
+exports.deleteMultipleBugReportZoneOfInterestById = factory.deleteMany(
+  ZoneOfInterest,
+  'bugReport'
+);
+exports.deleteMultipleReusableCodeZoneOfInterestById = factory.deleteMany(
+  ZoneOfInterest,
+  'reusableCode'
+);
+exports.deleteMultipleBlogPostZoneOfInterestById = factory.deleteMany(
+  ZoneOfInterest,
+  'blogPost'
+);
