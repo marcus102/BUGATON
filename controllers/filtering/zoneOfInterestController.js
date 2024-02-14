@@ -36,14 +36,7 @@ exports.checkInfo = catchAsync(async (req, res, next) => {
 });
 
 exports.createZoneOfInterest = catchAsync(async (req, res, next) => {
-  const {
-    user,
-    bugReport,
-    bugFix,
-    reusableCode,
-    blogPost,
-    zoneOfInterest
-  } = req.body;
+  const { user, bugReport, bugFix, reusableCode, blogPost, zoneOfInterest } = req.body;
 
   const newZoneOfInterest = await ZoneOfInterest.create({
     zoneOfInterest: zoneOfInterest,
@@ -65,15 +58,6 @@ exports.getZoneOfInterest = factory.getOne(ZoneOfInterest);
 exports.updateLZoneOfInterest = factory.updateOne(ZoneOfInterest);
 exports.deleteZoneOfInterest = factory.deleteOne(ZoneOfInterest);
 
-exports.deleteMultipleBugReportZoneOfInterestById = factory.deleteMany(
-  ZoneOfInterest,
-  'bugReport'
-);
-exports.deleteMultipleReusableCodeZoneOfInterestById = factory.deleteMany(
-  ZoneOfInterest,
-  'reusableCode'
-);
-exports.deleteMultipleBlogPostZoneOfInterestById = factory.deleteMany(
-  ZoneOfInterest,
-  'blogPost'
-);
+exports.deleteMultipleBugReportZoneOfInterestById = factory.deleteMany(ZoneOfInterest, 'bugReport');
+exports.deleteMultipleReusableCodeZoneOfInterestById = factory.deleteMany(ZoneOfInterest, 'reusableCode');
+exports.deleteMultipleBlogPostZoneOfInterestById = factory.deleteMany(ZoneOfInterest, 'blogPost');

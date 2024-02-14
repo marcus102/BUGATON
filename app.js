@@ -67,9 +67,7 @@ app.use(`${rootUrl}/training`, trainingRouter);
 app.use(`${rootUrl}/collaboration/slack`, collaborationRouter);
 
 app.all('*', (req, res, next) => {
-  next(
-    appError(`Sorry!!! cannot find ${req.originalUrl} on this server!`, 404)
-  );
+  next(appError(`Sorry!!! cannot find ${req.originalUrl} on this server!`, 404));
 });
 
 app.use(globalErrorHandler);

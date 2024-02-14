@@ -58,11 +58,7 @@ router
     bugReportController.deleteBug
   );
 
-router.patch(
-  '/:id/assignBugTo/:assigneeId',
-  bugReportController.setRequiredIds,
-  bugReportController.assignBugToUser
-);
+router.patch('/:id/assignBugTo/:assigneeId', bugReportController.setRequiredIds, bugReportController.assignBugToUser);
 
 router.patch(
   '/:id/deassignBugTo/:assigneeId',
