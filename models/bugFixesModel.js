@@ -81,7 +81,6 @@ const userAttemptSchema = new mongoose.Schema(
       default: null
     }
   },
-
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
@@ -95,18 +94,9 @@ userAttemptSchema.pre('findOneAndUpdate', function(next) {
 });
 
 userAttemptSchema.pre('save', function(next) {
-  const fieldsToCheck = [
-    'solution',
-    'description',
-    'result',
-    'frameworkVersions',
-    'contributors',
-    'status'
-  ];
+  const fieldsToCheck = ['solution', 'description', 'result', 'frameworkVersions', 'contributors', 'status'];
 
-  const isFieldsUnmodified = !fieldsToCheck.some(field =>
-    this.isModified(field)
-  );
+  const isFieldsUnmodified = !fieldsToCheck.some(field => this.isModified(field));
 
   if (isFieldsUnmodified || this.isNew) {
     return next();
@@ -207,11 +197,7 @@ userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
       { new: true }
     );
   } else {
-    await BugReport.findOneAndUpdate(
-      { _id: bugID },
-      { $set: { totalAttempts: 0 } },
-      { new: true }
-    );
+    await BugReport.findOneAndUpdate({ _id: bugID }, { $set: { totalAttempts: 0 } }, { new: true });
   }
 };
 

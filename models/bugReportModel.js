@@ -16,17 +16,11 @@ const bugReportSchema = new mongoose.Schema(
     },
     expectedBehavior: {
       type: String,
-      required: [
-        true,
-        'The expected behavior of the software is required! Please provide it'
-      ]
+      required: [true, 'The expected behavior of the software is required! Please provide it']
     },
     actualBehavior: {
       type: String,
-      required: [
-        true,
-        'Provide the actual behavior to help users understand more'
-      ]
+      required: [true, 'Provide the actual behavior to help users understand more']
     },
     bug: {
       type: String,
@@ -34,16 +28,7 @@ const bugReportSchema = new mongoose.Schema(
     },
     browser: {
       type: String,
-      enum: [
-        'Chrome',
-        'Firefox',
-        'Safari',
-        'Edge',
-        'Internet Explorer',
-        'Opera',
-        'Brave',
-        'Other'
-      ],
+      enum: ['Chrome', 'Firefox', 'Safari', 'Edge', 'Internet Explorer', 'Opera', 'Brave', 'Other'],
       default: 'Other'
     },
     // operatingSystem: {
@@ -61,15 +46,7 @@ const bugReportSchema = new mongoose.Schema(
     // },
     device: {
       type: String,
-      enum: [
-        'Desktop',
-        'Laptop',
-        'Tablet',
-        'Mobile',
-        'Smartphone',
-        'Smartwatch',
-        'Other'
-      ],
+      enum: ['Desktop', 'Laptop', 'Tablet', 'Mobile', 'Smartphone', 'Smartwatch', 'Other'],
       default: 'Other'
     },
     severity: {

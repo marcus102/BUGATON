@@ -15,6 +15,10 @@ const likeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'ReusableCode'
     },
+    blogPost: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    },
     timestamp: {
       type: Date,
       default: Date.now()

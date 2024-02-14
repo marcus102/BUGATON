@@ -13,11 +13,7 @@ exports.setRequiredIds = (req, res, next) => {
 };
 
 exports.assignBugToUser = factory.handleAssignment('assign', User, BugReport);
-exports.deassignBugFromUser = factory.handleAssignment(
-  'deassign',
-  User,
-  BugReport
-);
+exports.deassignBugFromUser = factory.handleAssignment('deassign', User, BugReport);
 
 exports.createBug = factory.createOne(BugReport);
 exports.getAllBugs = factory.getAll(BugReport);

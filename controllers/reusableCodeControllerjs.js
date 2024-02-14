@@ -12,9 +12,6 @@ exports.setRequiredIds = (req, res, next) => {
 
 exports.getAllReusableCodes = factory.getAll(ReusableCode);
 exports.createReusableCode = factory.createOne(ReusableCode);
-exports.getReusableCode = factory.getOne(ReusableCode, [
-  { path: 'image' },
-  { path: 'comments' }
-]);
+exports.getReusableCode = factory.getOne(ReusableCode, [{ path: 'image' }, { path: 'comments' }]);
 exports.deleteReusableCode = factory.deleteOne(ReusableCode);
 exports.updateReusableCode = factory.updateOne(ReusableCode);

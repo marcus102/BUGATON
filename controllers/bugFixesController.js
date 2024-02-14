@@ -18,14 +18,7 @@ exports.setRequiredIds = (req, res, next) => {
 };
 
 exports.createBugFix = catchAsync(async (req, res, next) => {
-  const {
-    solution,
-    description,
-    result,
-    user,
-    bugReport,
-    frameworkVersions
-  } = req.body;
+  const { solution, description, result, user, bugReport, frameworkVersions } = req.body;
   const { id } = req.params;
 
   const bugFix = await BugFixes.findById(id);
@@ -84,14 +77,10 @@ exports.updateBugFix = catchAsync(async (req, res, next) => {
 
   const filteredBody = filterParams.excludedFields(req.body, 'status');
 
-  const updatedBugFix = await BugFixes.findByIdAndUpdate(
-    req.params.id,
-    filteredBody,
-    {
-      new: true,
-      runValidators: true
-    }
-  );
+  const updatedBugFix = await BugFixes.findByIdAndUpdate(req.params.id, filteredBody, {
+    new: true,
+    runValidators: true
+  });
 
   res.status(201).json({
     status: 'success',
@@ -100,11 +89,7 @@ exports.updateBugFix = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteBugFix = factory.deleteOne(BugFixes);
-exports.deleteMultipleBugFixesById = factory.deleteMany(
-  BugFixes,
-  'bugReport',
-  true
-);
+exports.deleteMultipleBugFixesById = factory.deleteMany(BugFixes, 'bugReport', true);
 
 exports.getUserTotalBugFixes = catchAsync(async (req, res, next) => {
   const userId = req.body.user;

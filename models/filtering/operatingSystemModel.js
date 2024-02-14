@@ -4,16 +4,7 @@ const operatingSystemSchema = new mongoose.Schema(
   {
     operatingSystem: {
       type: String,
-      enum: [
-        'android',
-        'cross-platform',
-        'ios',
-        'linux',
-        'macOS',
-        'windows',
-        'other',
-        'all'
-      ],
+      enum: ['android', 'cross-platform', 'ios', 'linux', 'macOS', 'windows', 'other', 'all'],
       default: 'all'
     },
     user: {
@@ -48,9 +39,6 @@ const operatingSystemSchema = new mongoose.Schema(
   }
 );
 
-const OperatingSystem = mongoose.model(
-  'OperatingSystem',
-  operatingSystemSchema
-);
+const OperatingSystem = mongoose.model('OperatingSystem', operatingSystemSchema);
 
 module.exports = OperatingSystem;

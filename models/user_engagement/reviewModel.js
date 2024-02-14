@@ -21,6 +21,10 @@ const reviewSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'UserAttempt'
     },
+    blogPost: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Blog'
+    },
     createdAt: {
       type: Date,
       default: Date.now()
@@ -50,7 +54,6 @@ reviewSchema.pre(/^find/, function(next) {
 
 reviewSchema.pre('findOneAndUpdate', function(next) {
   this.getUpdate().updatedAt = Date.now();
-
   next();
 });
 

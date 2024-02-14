@@ -11,15 +11,16 @@ exports.setRequiredIds = (req, res, next) => {
   setIfUndefined('bugReport', req.params.bug_id);
   setIfUndefined('bugFix', req.params.bug_fixes_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
+  setIfUndefined('blogPost', req.params.blog_post_id);
 
   next();
 };
 
 exports.createComment = catchAsync(async (req, res, next) => {
-  const { user, bugReport, bugFix, reusableCode, comment } = req.body;
+  const { user, bugReport, bugFix, reusableCode, comment, blogPost } = req.body;
   const { id } = req.params;
 
-  if (!(bugReport || bugFix || reusableCode)) {
+  if (!(bugReport || bugFix || reusableCode || blogPost)) {
     return next(appError('You are not allowed to perform this action!', 405));
   }
 
@@ -29,7 +30,8 @@ exports.createComment = catchAsync(async (req, res, next) => {
     user: user,
     bugReport: bugReport,
     bugFix: bugFix,
-    reusableCode: reusableCode
+    reusableCode: reusableCode,
+    blogPost: blogPost
   });
 
   res.status(201).json({
@@ -41,17 +43,8 @@ exports.getAllComments = factory.getAll(Comment, { path: 'childComments' });
 exports.getComment = factory.getOne(Comment, { path: 'childComments' });
 exports.deleteComment = factory.deleteOne(Comment);
 exports.updateComment = factory.updateOne(Comment);
-exports.deleteMultipleBugFixesCommentsById = factory.deleteMany(
-  Comment,
-  'bugFix'
-);
+exports.deleteMultipleBugFixesCommentsById = factory.deleteMany(Comment, 'bugFix');
 
-exports.deleteMultipleBugReportsCommentsById = factory.deleteMany(
-  Comment,
-  'bugReport'
-);
+exports.deleteMultipleBugReportsCommentsById = factory.deleteMany(Comment, 'bugReport');
 
-exports.deleteMultipleBugFixesCommentsByArraysOfIds = factory.deleteArray(
-  Comment,
-  'bugFix'
-);
+exports.deleteMultipleBugFixesCommentsByArraysOfIds = factory.deleteArray(Comment, 'bugFix');

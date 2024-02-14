@@ -17,15 +17,6 @@ exports.setRequiredIds = (req, res, next) => {
   next();
 };
 
-// const filterObj = (obj, ...allowedFields) => {
-//   const newObj = {};
-//   Object.keys(obj).forEach(el => {
-//     if (allowedFields.includes(el)) newObj[el] = obj[el];
-//   });
-
-//   return newObj;
-// };
-
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
     cb(null, './../BUGATON/assets/profiles');
@@ -49,13 +40,7 @@ exports.deleteImage = catchAsync(async (req, res, next) => {
     return next();
   }
 
-  const oldImagePath = path.join(
-    __dirname,
-    '..',
-    'assets',
-    'profiles',
-    path.basename(imagePath.profile)
-  );
+  const oldImagePath = path.join(__dirname, '..', 'assets', 'profiles', path.basename(imagePath.profile));
 
   await fs.unlink(oldImagePath, err => {
     if (err) throw err;
@@ -101,13 +86,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'zoneOfInterests'
   );
 
-  filteredBody.profile = path.join(
-    __dirname,
-    '..',
-    'assets',
-    'profiles',
-    req.body.profile
-  );
+  filteredBody.profile = path.join(__dirname, '..', 'assets', 'profiles', req.body.profile);
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true

@@ -117,10 +117,7 @@ exports.handleAssignment = (operation, userDB, bugReportDB) =>
         }
       }
 
-      await bugReportDB.updateOne(
-        { _id: bugId },
-        { $push: { assignedTo: assigneeId } }
-      );
+      await bugReportDB.updateOne({ _id: bugId }, { $push: { assignedTo: assigneeId } });
     } else if (operation === 'deassign') {
       if (!bug.assignedTo) {
         return next(appError('Bug has not been assigned to a user yet!', 404));
@@ -131,10 +128,7 @@ exports.handleAssignment = (operation, userDB, bugReportDB) =>
         return next(appError('Bug already deassigned from user', 404));
       }
 
-      await bugReportDB.updateOne(
-        { _id: bugId },
-        { $pull: { assignedTo: assigneeId } }
-      );
+      await bugReportDB.updateOne({ _id: bugId }, { $pull: { assignedTo: assigneeId } });
     }
 
     const updatedBug = await bugReportDB.findById(bugId);

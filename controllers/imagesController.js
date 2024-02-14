@@ -5,6 +5,7 @@ const Image = require('./../models/imagesModel');
 const BugReport = require('./../models/bugReportModel');
 const UserAttempt = require('./../models/bugFixesModel');
 const ReusableCode = require('./../models/reusableCodeModel');
+const Blog = require('./../models/blogPostModel');
 const catchAsync = require('./../utils/catchAsync');
 const factory = require('./handlerFactory');
 const appError = require('../utils/appError');
@@ -17,6 +18,7 @@ exports.setRequiredIds = (req, res, next) => {
   setIfUndefined('bugReport', req.params.bug_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
   setIfUndefined('bugFix', req.params.bug_fixes_id);
+  setIfUndefined('blogPost', req.params.blog_post_id);
 
   next();
 };
@@ -34,13 +36,14 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 exports.checkInfo = catchAsync(async (req, res, next) => {
-  const { bugReport, reusableCode, bugFix } = req.body;
+  const { bugReport, reusableCode, bugFix, blogPost } = req.body;
 
   const bugReportDoc = await BugReport.findById(bugReport);
   const bugFixDoc = await UserAttempt.findById(bugFix);
   const reusableCodeDoc = await ReusableCode.findById(reusableCode);
+  const blogPostDoc = await Blog.findById(blogPost);
 
-  if (!(bugReportDoc || bugFixDoc || reusableCodeDoc)) {
+  if (!(bugReportDoc || bugFixDoc || reusableCodeDoc || blogPostDoc)) {
     return next(appError('You cannot perform this action', 405));
   }
 
@@ -50,17 +53,7 @@ exports.checkInfo = catchAsync(async (req, res, next) => {
 exports.uploadImage = upload.single('image');
 
 exports.createImage = catchAsync(async (req, res, next) => {
-  const {
-    caption,
-    tags,
-    likes,
-    privacy,
-    downloads,
-    user,
-    bugReport,
-    reusableCode,
-    bugFix
-  } = req.body;
+  const { caption, tags, likes, privacy, downloads, user, bugReport, reusableCode, bugFix, blogPost } = req.body;
   const { mimetype, size } = req.file;
 
   if (!req.file) {
@@ -79,7 +72,8 @@ exports.createImage = catchAsync(async (req, res, next) => {
     user: user,
     bugReport: bugReport,
     reusableCode: reusableCode,
-    bugFix: bugFix
+    bugFix: bugFix,
+    blogPost: blogPost
   });
 
   res.status(201).json({
@@ -100,25 +94,13 @@ exports.updateImage = catchAsync(async (req, res, next) => {
     return next(appError('No new image file provided for update', 400));
   }
 
-  const oldImagePath = path.join(
-    __dirname,
-    '..',
-    'assets',
-    'images',
-    path.basename(imageData.imageUrl)
-  );
+  const oldImagePath = path.join(__dirname, '..', 'assets', 'images', path.basename(imageData.imageUrl));
 
   await fs.unlink(oldImagePath, err => {
     if (err) throw err;
   });
 
-  imageData.imageUrl = path.join(
-    __dirname,
-    '..',
-    'assets',
-    'images',
-    req.file.filename
-  );
+  imageData.imageUrl = path.join(__dirname, '..', 'assets', 'images', req.file.filename);
   imageData.caption = req.body.caption || imageData.caption;
   imageData.tags = req.body.tags || imageData.tags;
   imageData.likes = req.body.likes || imageData.likes;
@@ -132,7 +114,7 @@ exports.updateImage = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      image: imageData
+      imageData
     }
   });
 });
@@ -156,20 +138,11 @@ exports.deleteImage = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.deletMultipleBugFixesImagesById = factory.deleteManyImages(
-  Image,
-  'bugFix'
-);
+exports.deletMultipleBugFixesImagesById = factory.deleteManyImages(Image, 'bugFix');
 
-exports.deletMultipleBugReportsImagesById = factory.deleteManyImages(
-  Image,
-  'bugReport'
-);
+exports.deletMultipleBugReportsImagesById = factory.deleteManyImages(Image, 'bugReport');
 
-exports.deletMultipleBugFixesImagesByArraysOfIds = factory.deleteArrayImages(
-  Image,
-  'bugFix'
-);
+exports.deletMultipleBugFixesImagesByArraysOfIds = factory.deleteArrayImages(Image, 'bugFix');
 
 exports.getAllImages = factory.getAll(Image);
 exports.getImage = factory.getOne(Image);

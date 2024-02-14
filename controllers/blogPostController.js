@@ -14,6 +14,13 @@ exports.setRequiredIds = (req, res, next) => {
 
 exports.createBlogPost = factory.createOne(Blog);
 exports.getAllBlogPosts = factory.getAll(Blog);
-exports.getBlogPost = factory.getOne(Blog);
+exports.getBlogPost = factory.getOne(Blog, [
+  { path: 'likes' },
+  { path: 'comments' },
+  { path: 'categories' },
+  { path: 'operatingSystem' },
+  { path: 'programmingLanguages' },
+  { path: 'zoneOfInterests' }
+]);
 exports.updateBolgPost = factory.updateOne(Blog);
 exports.deleteBlogPost = factory.deleteOne(Blog);

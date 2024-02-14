@@ -1,6 +1,7 @@
 const Like = require('../../models/user_engagement/likesModel');
 const BugFixes = require('../../models/bugFixesModel');
 const ReusableCode = require('../../models/reusableCodeModel');
+const Blog = require('./../../models/blogPostModel');
 const catchAsync = require('../../utils/catchAsync');
 const factory = require('../handlerFactory');
 const appError = require('../../utils/appError');
@@ -13,19 +14,32 @@ exports.setRequiredIds = (req, res, next) => {
   setIfUndefined('user', req.user.id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
   setIfUndefined('bugFix', req.params.bug_fixes_id);
+  setIfUndefined('blogPost', req.params.blog_post_id);
 
   next();
 };
 
 exports.toggleLike = catchAsync(async (req, res, next) => {
-  if (!req.body.bugFix && !req.body.reusableCode) {
+  const { bugFix, reusableCode, blogPost, user } = req.body;
+  if (!(bugFix || reusableCode || blogPost)) {
     return next(appError('This operation cannot be performed!', 401));
   }
 
-  const dataField = req.body.bugFix ? 'bugFix' : 'reusableCode';
-  const DB = req.body.bugFix ? BugFixes : ReusableCode;
+  let dataField;
+  let DB;
 
-  const query = { user: req.body.user, [dataField]: req.body[dataField] };
+  if (bugFix) {
+    dataField = 'bugFix';
+    DB = BugFixes;
+  } else if (reusableCode) {
+    dataField = 'reusableCode';
+    DB = ReusableCode;
+  } else if (blogPost) {
+    dataField = 'blogPost';
+    DB = Blog;
+  }
+
+  const query = { user: user, [dataField]: req.body[dataField] };
 
   const existingLike = await Like.findOne(query);
 
@@ -35,7 +49,7 @@ exports.toggleLike = catchAsync(async (req, res, next) => {
       $inc: { likeCount: -1 }
     });
   } else {
-    const likeData = { user: req.body.user, [dataField]: req.body[dataField] };
+    const likeData = { user: user, [dataField]: req.body[dataField] };
     const newLike = new Like(likeData);
     await newLike.save();
     await DB.findByIdAndUpdate(req.body[dataField], { $inc: { likeCount: 1 } });
@@ -48,7 +62,4 @@ exports.getAllUsersThatLikePosts = factory.getAll(Like);
 exports.getUserThatLikePosts = factory.getOne(Like);
 exports.deleteMultiplebugFixesLikesById = factory.deleteMany(Like, 'bugFix');
 
-exports.deleteMultiplebugFixesLikesByArraysOfIds = factory.deleteArray(
-  Like,
-  'bugFix'
-);
+exports.deleteMultiplebugFixesLikesByArraysOfIds = factory.deleteArray(Like, 'bugFix');

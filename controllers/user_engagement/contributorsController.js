@@ -16,10 +16,7 @@ exports.setRequiredIds = (req, res, next) => {
 
 exports.getAllContributions = factory.getAll(Contributor);
 exports.getContribution = factory.getOne(Contributor);
-exports.deleteMultipleContributionsById = factory.deleteMany(
-  Contributor,
-  'bugReport'
-);
+exports.deleteMultipleContributionsById = factory.deleteMany(Contributor, 'bugReport');
 
 exports.updateContribution = catchAsync(async (req, res, next) => {
   return next(appError('Cannot perform this action with this url!', 403));

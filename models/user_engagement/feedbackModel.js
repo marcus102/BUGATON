@@ -23,13 +23,7 @@ const feedbackSchema = new mongoose.Schema(
     },
     agreement: {
       type: String,
-      enum: [
-        'strongly agree',
-        'agree',
-        'disagree',
-        'strongly disagree',
-        'neutral'
-      ],
+      enum: ['strongly agree', 'agree', 'disagree', 'strongly disagree', 'neutral'],
       default: 'neutral'
     },
     createdAt: {

@@ -96,8 +96,7 @@ const imageSchema = new mongoose.Schema(
           // Check if the file extension is in the accepted formats
           return acceptedFormats.includes(fileExtension);
         },
-        message:
-          'Invalid file format. Accepted formats: jpg, jpeg, png, gif, bmp'
+        message: 'Invalid file format. Accepted formats: jpg, jpeg, png, gif, bmp'
       }
     },
     size: Number,
