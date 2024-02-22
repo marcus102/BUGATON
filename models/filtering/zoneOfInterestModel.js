@@ -13,7 +13,6 @@ const zoneOfInterestSchema = new mongoose.Schema(
         'security',
         'artificial Intelligence',
         'web Development',
-        'other',
         'all'
       ],
       default: 'all'
@@ -23,6 +22,7 @@ const zoneOfInterestSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
+    username: String,
     bugReport: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'BugReport'

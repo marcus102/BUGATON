@@ -12,6 +12,7 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
+  setIfUndefined('username', req.user.username);
   setIfUndefined('bugReport', req.params.bug_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
   setIfUndefined('blogPost', req.params.blog_post_id);
@@ -33,18 +34,18 @@ exports.checkInfo = catchAsync(async (req, res, next) => {
   next();
 });
 exports.createCategory = catchAsync(async (req, res, next) => {
-  const {
-    user,
-    bugReport,
-    bugFix,
-    reusableCode,
-    blogPost,
-    category
-  } = req.body;
+  const { user, username, bugReport, bugFix, reusableCode, blogPost, category } = req.body;
+
+  let updatedUsername = username;
+
+  if (bugReport || bugFix || reusableCode || blogPost) {
+    updatedUsername = null;
+  }
 
   const newCategory = await Category.create({
     category: category,
     user: user,
+    username: updatedUsername,
     bugReport: bugReport,
     bugFix: bugFix,
     reusableCode: reusableCode,
@@ -62,15 +63,6 @@ exports.getCategory = factory.getOne(Category);
 exports.updateCategory = factory.updateOne(Category);
 exports.deleteCategory = factory.deleteOne(Category);
 
-exports.deleteMultipleBugReportCategoriesById = factory.deleteMany(
-  Category,
-  'bugReport'
-);
-exports.deleteMultipleReusableCodeCategoriesById = factory.deleteMany(
-  Category,
-  'reusableCode'
-);
-exports.deleteMultipleBlogPostCategoriesById = factory.deleteMany(
-  Category,
-  'blogPost'
-);
+exports.deleteMultipleBugReportCategoriesById = factory.deleteMany(Category, 'bugReport');
+exports.deleteMultipleReusableCodeCategoriesById = factory.deleteMany(Category, 'reusableCode');
+exports.deleteMultipleBlogPostCategoriesById = factory.deleteMany(Category, 'blogPost');

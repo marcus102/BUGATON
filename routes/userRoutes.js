@@ -2,6 +2,7 @@ const express = require('express');
 const userController = require('./../controllers/userController');
 const authController = require('../controllers/authenticatioController');
 const followersRouter = require('./user_engagement/followersRoutes');
+const imageController = require('./../controllers/imagesController');
 
 const router = express.Router({ mergeParams: true });
 
@@ -16,10 +17,17 @@ router.use('/my-followers', followersRouter);
 
 router.patch(
   '/profile',
-  userController.deleteImage,
-  userController.uploadImage,
-  userController.setRequiredIds,
-  userController.updateMe
+  imageController.setRequiredIds,
+  imageController.uploadImage,
+  imageController.setRequiredIds,
+  imageController.updateImage
+);
+router.post(
+  '/profile',
+  imageController.setRequiredIds,
+  imageController.uploadImage,
+  imageController.setRequiredIds,
+  imageController.createImage
 );
 router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);

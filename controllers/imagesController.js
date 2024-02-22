@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
+// const User = require('./../models/userModel');
 const Image = require('./../models/imagesModel');
 const BugReport = require('./../models/bugReportModel');
 const UserAttempt = require('./../models/bugFixesModel');
@@ -15,6 +16,7 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
+  setIfUndefined('username', req.user.username);
   setIfUndefined('bugReport', req.params.bug_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
   setIfUndefined('bugFix', req.params.bug_fixes_id);
@@ -25,7 +27,13 @@ exports.setRequiredIds = (req, res, next) => {
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, './../BUGATON/assets/images');
+    const { bugReport, reusableCode, bugFix, blogPost } = req.body;
+    let imgDestination = 'profiles';
+    if (bugReport || bugFix || reusableCode || blogPost) {
+      imgDestination = 'images';
+    }
+
+    cb(null, `./../BUGATON/assets/${imgDestination}`);
   },
   filename: function(req, file, cb) {
     // Use the current timestamp as the file name to make it unique
@@ -34,6 +42,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
+exports.uploadImage = upload.single('image');
 
 exports.checkInfo = catchAsync(async (req, res, next) => {
   const { bugReport, reusableCode, bugFix, blogPost } = req.body;
@@ -50,18 +59,47 @@ exports.checkInfo = catchAsync(async (req, res, next) => {
   next();
 });
 
-exports.uploadImage = upload.single('image');
+// exports.checkUserProfile = catchAsync(async (req, res, next) => {
+//   const { user, username } = req.body;
+//   const userDoc = await User.findById(user);
+
+//   if (!userDoc && userDoc !== username) {
+//     return next(appError('User does not exist!', 405));
+//   }
+
+//   next();
+// });
 
 exports.createImage = catchAsync(async (req, res, next) => {
-  const { caption, tags, likes, privacy, downloads, user, bugReport, reusableCode, bugFix, blogPost } = req.body;
+  const {
+    caption,
+    tags,
+    likes,
+    privacy,
+    downloads,
+    user,
+    username,
+    bugReport,
+    reusableCode,
+    bugFix,
+    blogPost
+  } = req.body;
   const { mimetype, size } = req.file;
 
   if (!req.file) {
     return next(appError('No image file provided', 400));
   }
 
+  let updatedUsername = username;
+  let imgDirectory = 'profiles';
+
+  if (bugReport || bugFix || reusableCode || blogPost) {
+    updatedUsername = null;
+    imgDirectory = 'images';
+  }
+
   const newImage = await Image.create({
-    imageUrl: path.join(__dirname, '..', 'assets', 'images', req.file.filename),
+    imageUrl: path.join(__dirname, '..', 'assets', imgDirectory, req.file.filename),
     caption: caption,
     tags: tags,
     likes: likes,
@@ -70,6 +108,7 @@ exports.createImage = catchAsync(async (req, res, next) => {
     fileFormat: mimetype,
     downloads: downloads,
     user: user,
+    username: updatedUsername,
     bugReport: bugReport,
     reusableCode: reusableCode,
     bugFix: bugFix,
@@ -94,20 +133,29 @@ exports.updateImage = catchAsync(async (req, res, next) => {
     return next(appError('No new image file provided for update', 400));
   }
 
-  const oldImagePath = path.join(__dirname, '..', 'assets', 'images', path.basename(imageData.imageUrl));
+  const { caption, tags, likes, privacy, downloads } = req.body;
+  const { size, mimetype, filename } = req.file;
+
+  let imgDirectory = 'profiles';
+
+  if (imageData.username === null) {
+    imgDirectory = 'images';
+  }
+
+  const oldImagePath = path.join(__dirname, '..', 'assets', imgDirectory, path.basename(imageData.imageUrl));
 
   await fs.unlink(oldImagePath, err => {
     if (err) throw err;
   });
 
-  imageData.imageUrl = path.join(__dirname, '..', 'assets', 'images', req.file.filename);
-  imageData.caption = req.body.caption || imageData.caption;
-  imageData.tags = req.body.tags || imageData.tags;
-  imageData.likes = req.body.likes || imageData.likes;
-  imageData.privacy = req.body.privacy || imageData.privacy;
-  imageData.size = req.file.size || imageData.size;
-  imageData.fileFormat = req.file.mimetype || imageData.fileFormat;
-  imageData.downloads = req.body.downloads || imageData.downloads;
+  imageData.imageUrl = path.join(__dirname, '..', 'assets', 'images', filename);
+  imageData.caption = caption || imageData.caption;
+  imageData.tags = tags || imageData.tags;
+  imageData.likes = likes || imageData.likes;
+  imageData.privacy = privacy || imageData.privacy;
+  imageData.size = size || imageData.size;
+  imageData.fileFormat = mimetype || imageData.fileFormat;
+  imageData.downloads = downloads || imageData.downloads;
 
   await imageData.save({ validateBeforeSave: true });
 

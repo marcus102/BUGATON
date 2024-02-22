@@ -29,14 +29,7 @@ const discussionSchema = new mongoose.Schema(
     tags: [
       {
         type: String,
-        enum: [
-          'education',
-          'coding',
-          'codeathon',
-          'collaboration',
-          'general',
-          'other'
-        ],
+        enum: ['education', 'coding', 'codeathon', 'collaboration', 'general', 'other'],
         default: 'general'
       }
     ],

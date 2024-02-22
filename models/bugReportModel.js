@@ -31,19 +31,6 @@ const bugReportSchema = new mongoose.Schema(
       enum: ['Chrome', 'Firefox', 'Safari', 'Edge', 'Internet Explorer', 'Opera', 'Brave', 'Other'],
       default: 'Other'
     },
-    // operatingSystem: {
-    //   type: String,
-    //   enum: [
-    //     'Windows',
-    //     'macOS',
-    //     'Linux',
-    //     'iOS',
-    //     'Android',
-    //     'Windows Phone',
-    //     'Other'
-    //   ],
-    //   default: 'Other'
-    // },
     device: {
       type: String,
       enum: ['Desktop', 'Laptop', 'Tablet', 'Mobile', 'Smartphone', 'Smartwatch', 'Other'],
@@ -83,12 +70,6 @@ const bugReportSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    // zoneOfInterests: [
-    //   {
-    //     type: String,
-    //     default: null
-    //   }
-    // ],
     createdAt: {
       type: Date,
       default: Date.now()

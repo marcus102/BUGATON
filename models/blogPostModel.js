@@ -74,6 +74,12 @@ const blogSchema = new mongoose.Schema(
   }
 );
 
+blogSchema.virtual('reviews', {
+  ref: 'Review',
+  localField: '_id',
+  foreignField: 'blogPost'
+});
+
 blogSchema.virtual('likes', {
   ref: 'Like',
   localField: '_id',

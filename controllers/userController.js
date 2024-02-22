@@ -1,6 +1,6 @@
-const path = require('path');
-const fs = require('fs');
-const multer = require('multer');
+// const path = require('path');
+// const fs = require('fs');
+// const multer = require('multer');
 const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const appError = require('../utils/appError');
@@ -17,37 +17,37 @@ exports.setRequiredIds = (req, res, next) => {
   next();
 };
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, './../BUGATON/assets/profiles');
-  },
-  filename: function(req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
+// const storage = multer.diskStorage({
+//   destination: function(req, file, cb) {
+//     cb(null, './../BUGATON/assets/profiles');
+//   },
+//   filename: function(req, file, cb) {
+//     cb(null, Date.now() + path.extname(file.originalname));
+//   }
+// });
 
-const upload = multer({ storage: storage });
+// const upload = multer({ storage: storage });
 
-exports.uploadImage = upload.single('image');
+// exports.uploadImage = upload.single('image');
 
-exports.deleteImage = catchAsync(async (req, res, next) => {
-  const imagePath = await User.findById(req.user.id);
-  if (!imagePath) {
-    return next(appError('Profile not found!', 404));
-  }
+// exports.deleteImage = catchAsync(async (req, res, next) => {
+//   const imagePath = await User.findById(req.user.id);
+//   if (!imagePath) {
+//     return next(appError('Profile not found!', 404));
+//   }
 
-  if (imagePath.profile === null || !imagePath.profile) {
-    return next();
-  }
+//   if (imagePath.profile === null || !imagePath.profile) {
+//     return next();
+//   }
 
-  const oldImagePath = path.join(__dirname, '..', 'assets', 'profiles', path.basename(imagePath.profile));
+//   const oldImagePath = path.join(__dirname, '..', 'assets', 'profiles', path.basename(imagePath.profile));
 
-  await fs.unlink(oldImagePath, err => {
-    if (err) throw err;
-  });
+//   await fs.unlink(oldImagePath, err => {
+//     if (err) throw err;
+//   });
 
-  next();
-});
+//   next();
+// });
 
 exports.createUser = catchAsync(async (req, res, next) => {
   res.status(500).json({
@@ -59,7 +59,13 @@ exports.createUser = catchAsync(async (req, res, next) => {
 exports.getAllUsers = factory.getAll(User);
 exports.deleteUser = factory.deleteOne(User);
 exports.updateUser = factory.updateOne(User);
-exports.getUser = factory.getOne(User, { path: 'image' });
+exports.getUser = factory.getOne(User, [
+  { path: 'image' },
+  { path: 'zoneOfInterests' },
+  { path: 'categories' },
+  { path: 'operatingSystem' },
+  { path: 'programmingLanguages' }
+]);
 
 exports.getMe = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;
@@ -78,15 +84,12 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'lastName',
     'username',
     'profile',
-    'images',
     'email',
     'website',
     'bio',
-    'location',
-    'zoneOfInterests'
+    'location'
   );
 
-  filteredBody.profile = path.join(__dirname, '..', 'assets', 'profiles', req.body.profile);
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidators: true

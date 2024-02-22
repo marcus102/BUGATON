@@ -46,14 +46,7 @@ const userAttemptSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    ratings: {
-      type: Number,
-      default: null,
-      min: [1, 'rating must not be below 1.0 !'],
-      max: [5, 'rating must not be above 5.0 !'],
-      set: value => Math.round(value * 10) / 10
-    },
-    ratingsQuantity: {
+    totalRatings: {
       type: Number,
       default: 0
     },

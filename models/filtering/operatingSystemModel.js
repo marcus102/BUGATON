@@ -12,6 +12,7 @@ const operatingSystemSchema = new mongoose.Schema(
       ref: 'User',
       required: true
     },
+    username: String,
     bugReport: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'BugReport'

@@ -12,6 +12,7 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
+  setIfUndefined('username', req.user.username);
   setIfUndefined('bugReport', req.params.bug_id);
   setIfUndefined('bugFix', req.params.bug_fixes_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
@@ -36,18 +37,18 @@ exports.checkInfo = catchAsync(async (req, res, next) => {
 });
 
 exports.createLanguage = catchAsync(async (req, res, next) => {
-  const {
-    user,
-    bugReport,
-    bugFix,
-    reusableCode,
-    blogPost,
-    language
-  } = req.body;
+  const { user, username, bugReport, bugFix, reusableCode, blogPost, language } = req.body;
+
+  let updatedUsername = username;
+
+  if (bugReport || bugFix || reusableCode || blogPost) {
+    updatedUsername = null;
+  }
 
   const newLanguage = await Language.create({
     language: language,
     user: user,
+    username: updatedUsername,
     bugReport: bugReport,
     bugFix: bugFix,
     reusableCode: reusableCode,
@@ -64,15 +65,6 @@ exports.getLanguage = factory.getOne(Language);
 exports.updateLanguage = factory.updateOne(Language);
 exports.deleteLanguage = factory.deleteOne(Language);
 
-exports.deleteMultipleBugReportLanguageById = factory.deleteMany(
-  Language,
-  'bugReport'
-);
-exports.deleteMultipleReusableCodeLanguageById = factory.deleteMany(
-  Language,
-  'reusableCode'
-);
-exports.deleteMultipleBlogPostLanguageById = factory.deleteMany(
-  Language,
-  'blogPost'
-);
+exports.deleteMultipleBugReportLanguageById = factory.deleteMany(Language, 'bugReport');
+exports.deleteMultipleReusableCodeLanguageById = factory.deleteMany(Language, 'reusableCode');
+exports.deleteMultipleBlogPostLanguageById = factory.deleteMany(Language, 'blogPost');

@@ -12,6 +12,7 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
+  setIfUndefined('username', req.user.username);
   setIfUndefined('bugReport', req.params.bug_id);
   setIfUndefined('bugFix', req.params.bug_fixes_id);
   setIfUndefined('reusableCode', req.params.reusable_code_id);
@@ -36,11 +37,18 @@ exports.checkInfo = catchAsync(async (req, res, next) => {
 });
 
 exports.createZoneOfInterest = catchAsync(async (req, res, next) => {
-  const { user, bugReport, bugFix, reusableCode, blogPost, zoneOfInterest } = req.body;
+  const { user, username, bugReport, bugFix, reusableCode, blogPost, zoneOfInterest } = req.body;
+
+  let updatedUsername = username;
+
+  if (bugReport || bugFix || reusableCode || blogPost) {
+    updatedUsername = null;
+  }
 
   const newZoneOfInterest = await ZoneOfInterest.create({
     zoneOfInterest: zoneOfInterest,
     user: user,
+    username: updatedUsername,
     bugReport: bugReport,
     bugFix: bugFix,
     reusableCode: reusableCode,

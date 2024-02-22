@@ -17,10 +17,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, 'User must have a username!'],
       lowercase: true,
-      unique: [
-        true,
-        'Sorry, the username is already in use. Please choose another one!'
-      ],
+      unique: [true, 'Sorry, the username is already in use. Please choose another one!'],
       trim: true
     },
     email: {
@@ -43,16 +40,6 @@ const userSchema = new mongoose.Schema(
         message: 'Please provide a valid phone number!'
       }
     },
-    // profile: {
-    //   type: String,
-    //   default: null
-    // },
-    // images: [
-    //   {
-    //     type: String,
-    //     default: []
-    //   }
-    // ],
     followersCount: {
       type: Number,
       default: 0
@@ -82,12 +69,6 @@ const userSchema = new mongoose.Schema(
       ],
       default: 'user'
     },
-    // zoneOfInterests: [
-    //   {
-    //     type: String,
-    //     default: []
-    //   }
-    // ],
     links: [
       {
         type: String,
@@ -154,6 +135,30 @@ userSchema.virtual('image', {
   foreignField: 'user'
 });
 
+userSchema.virtual('zoneOfInterests', {
+  ref: 'ZoneOfInterest',
+  localField: 'username',
+  foreignField: 'username'
+});
+
+userSchema.virtual('categories', {
+  ref: 'Category',
+  localField: 'username',
+  foreignField: 'username'
+});
+
+userSchema.virtual('operatingSystem', {
+  ref: 'OperatingSystem',
+  localField: 'username',
+  foreignField: 'username'
+});
+
+userSchema.virtual('programmingLanguages', {
+  ref: 'Language',
+  localField: 'username',
+  foreignField: 'username'
+});
+
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
 
@@ -175,19 +180,13 @@ userSchema.pre(/^find/, function(next) {
   next();
 });
 
-userSchema.methods.correctPassword = async function(
-  candidatePassword,
-  userPassword
-) {
+userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   if (this.passwordChangedAt) {
-    const changedTimeStamp = parseInt(
-      this.passwordChangedAt.getTime() / 1000,
-      10
-    );
+    const changedTimeStamp = parseInt(this.passwordChangedAt.getTime() / 1000, 10);
 
     return JWTTimestamp < changedTimeStamp;
   }

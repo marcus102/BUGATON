@@ -109,6 +109,7 @@ const imageSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'User must be provided!']
     },
+    username: String,
     bugReport: {
       type: mongoose.Schema.ObjectId,
       ref: 'BugReport'

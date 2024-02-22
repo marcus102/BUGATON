@@ -15,6 +15,7 @@ exports.setRequiredIds = (req, res, next) => {
 exports.createBlogPost = factory.createOne(Blog);
 exports.getAllBlogPosts = factory.getAll(Blog);
 exports.getBlogPost = factory.getOne(Blog, [
+  { path: 'reviews' },
   { path: 'likes' },
   { path: 'comments' },
   { path: 'categories' },
