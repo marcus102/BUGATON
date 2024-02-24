@@ -1,4 +1,3 @@
-// const mongoose = require('mongoose');
 const ReportHub = require('../../models/restrictions/reportHubModel');
 const User = require('../../models/userModel');
 const BugReport = require('./../../models/bugReportModel');
@@ -132,9 +131,47 @@ exports.reportAccount = catchAsync(async (req, res, next) => {
   });
 });
 
-// user will be allowed to change report for 24h max
-exports.updateReportedAccount = catchAsync(async (req, res, next) => {});
-
+exports.updateReportedAccount = factory.updateOne(ReportHub); // user will be allowed to change report for 24h max
 exports.getRepotedAccount = factory.getOne(ReportHub); // accessible by user for 24h, admin and medoreator
 exports.getAllReportedAccounts = factory.getAll(ReportHub); // only accessible by admin and medoreator
 exports.deleteAccountReport = factory.deleteOne(ReportHub); // user will be allowed to delete report for 24h max
+
+exports.deleteAccountReport = catchAsync(async (req, res, next) => {
+  const reportDoc = await ReportHub.findById(req.params.id);
+
+  if (!reportDoc) {
+    return next(appError('This doccument does not exist', 405));
+  }
+  const { bugReport, reusableCode, bugFix, blogPost, targetAccount, comment } = reportDoc;
+
+  let objID;
+  let DB;
+
+  if (bugFix) {
+    objID = bugFix;
+    DB = BugFixes;
+  } else if (reusableCode) {
+    objID = reusableCode.valueOf();
+    DB = ReusableCode;
+  } else if (blogPost) {
+    objID = blogPost.valueOf();
+    DB = Blog;
+  } else if (targetAccount) {
+    objID = targetAccount.valueOf();
+    DB = User;
+  } else if (bugReport) {
+    objID = bugReport.valueOf();
+    DB = BugReport;
+  } else if (comment) {
+    objID = comment.valueOf();
+    DB = Comment;
+  }
+
+  await DB.findByIdAndUpdate(objID, { $inc: { reportCount: -1 } });
+
+  await ReportHub.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({
+    status: 'success'
+  });
+});

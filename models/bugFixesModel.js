@@ -17,8 +17,7 @@ const userAttemptSchema = new mongoose.Schema(
     },
     parentSolution: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'UserAttempt',
-      default: null
+      ref: 'UserAttempt'
     },
     user: {
       type: mongoose.Schema.ObjectId,

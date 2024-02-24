@@ -17,12 +17,6 @@ const blogSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Blog post must have a user']
     },
-    // images: [
-    //   {
-    //     type: String,
-    //     default: []
-    //   }
-    // ],
     // contributors: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,
@@ -46,18 +40,6 @@ const blogSchema = new mongoose.Schema(
       enum: ['draft', 'pending', 'rejected', 'published'],
       default: 'draft'
     },
-    // categories: [
-    //   {
-    //     type: String,
-    //     enum: ['node.js', 'coding', 'Other'],
-    //     default: 'Other'
-    //   }
-    // ],
-    // tag: {
-    //   type: String,
-    //   enum: ['tag1', 'tag2', 'Other'],
-    //   default: 'Other'
-    // },
     flagged: {
       type: Boolean,
       default: false

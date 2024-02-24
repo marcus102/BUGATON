@@ -14,12 +14,12 @@ router
     accountReportController.setRequiredIds,
     accountReportController.reportAccount
   )
-  .get(accountReportController.getAllReportedAccounts)
-  .get(accountReportController.getRepotedAccount);
+  .get(accountReportController.getAllReportedAccounts);
 
 router
   .route('/:id')
+  .get(accountReportController.getRepotedAccount)
   .patch(accountReportController.updateReportedAccount)
-  .delete(accountReportController.deleteAccountReport);
+  .delete(accountReportController.setRequiredIds, accountReportController.deleteAccountReport);
 
 module.exports = router;

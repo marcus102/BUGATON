@@ -59,18 +59,11 @@ const userSchema = new mongoose.Schema(
         validate: {
           validator: validator.isURL,
           message: 'Please provide a valid URL!'
-        },
-        default: null
+        }
       }
     ],
-    bio: {
-      type: String,
-      default: null
-    },
-    location: {
-      type: String,
-      default: null
-    },
+    bio: String,
+    location: String,
     starCount: {
       type: Number,
       default: 0
