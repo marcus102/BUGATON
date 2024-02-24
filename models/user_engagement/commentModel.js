@@ -35,6 +35,10 @@ const commentSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    likeCount: {
+      type: Number,
+      default: 0
+    },
     createdAt: {
       type: Date,
       default: Date.now
@@ -62,6 +66,12 @@ commentSchema.virtual('childComments', {
   ref: 'Comment',
   localField: '_id',
   foreignField: 'parentComment'
+});
+
+commentSchema.virtual('likes', {
+  ref: 'Like',
+  localField: '_id',
+  foreignField: 'comment'
 });
 
 commentSchema.pre(/^find/, function(next) {
