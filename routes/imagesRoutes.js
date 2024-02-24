@@ -26,11 +26,7 @@ router
 
 router
   .route('/:id')
-  .patch(
-    imagesController.uploadImage,
-    imagesController.setRequiredIds,
-    imagesController.updateImage
-  )
+  .patch(imagesController.uploadImage, imagesController.setRequiredIds, imagesController.updateImage)
   .delete(imagesController.deleteImage)
   .get(imagesController.getImage);
 

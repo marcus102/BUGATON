@@ -1,19 +1,21 @@
 const express = require('express');
 const userController = require('./../controllers/userController');
-const authController = require('../controllers/authenticatioController');
+const authenticatioController = require('../controllers/authenticatioController');
 const followersRouter = require('./user_engagement/followersRoutes');
+const reportHubRouter = require('./restrictions/reportHubRoutes');
 const imageController = require('./../controllers/imagesController');
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/signup', authController.signUp);
-router.post('/login', authController.logIn);
-router.post('/forgotPassword', authController.forgotPassword);
-router.patch('/resetPassword/:token', authController.resetPassword);
-
-router.use(authController.protect);
+router.post('/signup', authenticatioController.signUp);
+router.post('/login', authenticatioController.logIn);
+router.post('/forgotPassword', authenticatioController.forgotPassword);
+router.patch('/resetPassword/:token', authenticatioController.resetPassword);
 
 router.use('/my-followers', followersRouter);
+router.use('/:account_id/report_account', reportHubRouter);
+
+router.use(authenticatioController.protect);
 
 router.patch(
   '/profile',
@@ -29,12 +31,12 @@ router.post(
   imageController.setRequiredIds,
   imageController.createImage
 );
-router.patch('/updateMyPassword', authController.updatePassword);
+router.patch('/updateMyPassword', authenticatioController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
 router.patch('/updateMe', userController.updateMe);
 router.delete('/deleteMe', userController.deleteMe);
 
-router.use(authController.restrictTo('admin'));
+router.use(authenticatioController.restrictTo('admin'));
 
 router
   .route('/')
@@ -47,4 +49,5 @@ router
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+router.patch('/:user_id/assign_role', userController.setRequiredIds, userController.assignUserRole);
 module.exports = router;

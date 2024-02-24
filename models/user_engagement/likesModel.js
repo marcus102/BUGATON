@@ -19,6 +19,10 @@ const likeSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Blog'
     },
+    commemt: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment'
+    }, // To Do
     timestamp: {
       type: Date,
       default: Date.now()

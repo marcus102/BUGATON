@@ -48,25 +48,9 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
-    starCount: {
-      type: Number,
-      default: 0
-    },
     role: {
       type: String,
-      enum: [
-        'user',
-        'moderator',
-        'developer',
-        'tester',
-        'support',
-        'analyst',
-        'content_creator',
-        'educator:',
-        'collaborator',
-        'superuser',
-        'admin'
-      ],
+      enum: ['user', 'moderator', 'collaborator', 'admin'],
       default: 'user'
     },
     links: [
@@ -76,7 +60,7 @@ const userSchema = new mongoose.Schema(
           validator: validator.isURL,
           message: 'Please provide a valid URL!'
         },
-        default: []
+        default: null
       }
     ],
     bio: {
@@ -86,6 +70,14 @@ const userSchema = new mongoose.Schema(
     location: {
       type: String,
       default: null
+    },
+    starCount: {
+      type: Number,
+      default: 0
+    },
+    reportCount: {
+      type: Number,
+      default: 0
     },
     password: {
       type: String,
@@ -117,6 +109,11 @@ const userSchema = new mongoose.Schema(
     },
     passwordResetToken: String,
     passwordResetExpires: Date,
+    acountSatus: {
+      type: String,
+      enum: ['healthy', 'warning', 'not healthy'],
+      default: 'healthy'
+    },
     active: {
       type: Boolean,
       default: true,

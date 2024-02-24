@@ -6,6 +6,7 @@ const categoriesRouter = require('./filtering/categoriesRoutes');
 const operatingSystemRouter = require('./filtering/operatingSystemRoutes');
 const programmingLanguagesRouter = require('./filtering/programmingLanguagesRoutes');
 const zoneOfInterestRouter = require('./filtering/zoneOfInterestRoutes');
+const reportHubRouter = require('./restrictions/reportHubRoutes');
 const bugFixesController = require('../controllers/bugFixesController');
 const contributorsController = require('../controllers/user_engagement/contributorsController');
 const imagesController = require('./../controllers/imagesController');
@@ -30,6 +31,8 @@ router.use('/:bug_id/category', categoriesRouter);
 router.use('/:bug_id/operating_system', operatingSystemRouter);
 router.use('/:bug_id/language', programmingLanguagesRouter);
 router.use('/:bug_id/zone_of_interest', zoneOfInterestRouter);
+//restrictions
+router.use('/:bug_id/report_bug_report', reportHubRouter);
 
 router.use(authenticatioController.protect);
 

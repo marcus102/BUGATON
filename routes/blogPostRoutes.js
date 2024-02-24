@@ -7,6 +7,7 @@ const operatingSystemRouter = require('./filtering/operatingSystemRoutes');
 const programmingLanguagesRouter = require('./filtering/programmingLanguagesRoutes');
 const zoneOfInterestRouter = require('./filtering/zoneOfInterestRoutes');
 const categoriesRouter = require('./../routes/filtering/categoriesRoutes');
+const reportHubRouter = require('./restrictions/reportHubRoutes');
 const commentsController = require('../controllers/user_engagement/commentsControllers');
 const authenticatioController = require('../controllers/authenticatioController');
 const likesController = require('../controllers/user_engagement/likesController');
@@ -30,6 +31,8 @@ router.use('/:blog_post_id/category', categoriesRouter);
 router.use('/:blog_post_id/operating_system', operatingSystemRouter);
 router.use('/:blog_post_id/language', programmingLanguagesRouter);
 router.use('/:blog_post_id/zone_of_interest', zoneOfInterestRouter);
+//restricitions
+router.use('/:blog_post_id/report_blog_post', reportHubRouter);
 
 router.use(authenticatioController.protect);
 

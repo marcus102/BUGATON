@@ -1,6 +1,6 @@
 const Language = require('./../../models/filtering/programmingLanguagesModel');
 const BugReport = require('./../../models/bugReportModel');
-const UserAttempt = require('./../../models/bugFixesModel');
+const BugFixes = require('./../../models/bugFixesModel');
 const ReusableCode = require('./../../models/reusableCodeModel');
 const Blog = require('./../../models/blogPostModel');
 const factory = require('./../handlerFactory');
@@ -24,12 +24,26 @@ exports.setRequiredIds = (req, res, next) => {
 exports.checkInfo = catchAsync(async (req, res, next) => {
   const { bugReport, reusableCode, bugFix, blogPost } = req.body;
 
-  const bugReportDoc = await BugReport.findById(bugReport);
-  const bugFixDoc = await UserAttempt.findById(bugFix);
-  const reusableCodeDoc = await ReusableCode.findById(reusableCode);
-  const blogPostDoc = await Blog.findById(blogPost);
+  let id;
+  let DB;
 
-  if (!(bugReportDoc || bugFixDoc || reusableCodeDoc || blogPostDoc)) {
+  if (bugFix) {
+    id = bugFix;
+    DB = BugFixes;
+  } else if (reusableCode) {
+    id = reusableCode;
+    DB = ReusableCode;
+  } else if (blogPost) {
+    id = blogPost;
+    DB = Blog;
+  } else if (bugReport) {
+    id = bugReport;
+    DB = BugReport;
+  }
+
+  const targetDoc = await DB.findById(id);
+
+  if (!targetDoc) {
     return next(appError('You cannot perform this action', 405));
   }
 

@@ -9,14 +9,8 @@ router.use(authenticatioController.protect);
 router
   .route('/')
   .post(likesController.setRequiredIds, likesController.toggleLike)
-  .get(
-    authenticatioController.restrictTo('admin', 'user'),
-    likesController.getAllUsersThatLikePosts
-  );
+  .get(authenticatioController.restrictTo('admin', 'user'), likesController.getAllUsersThatLikePosts);
 
-router.get(
-  '/:id',
-  authenticatioController.restrictTo('admin'),
-  likesController.getUserThatLikePosts
-);
+router.get('/:id', authenticatioController.restrictTo('admin'), likesController.getUserThatLikePosts);
+
 module.exports = router;

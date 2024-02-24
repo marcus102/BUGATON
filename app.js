@@ -28,6 +28,7 @@ const categoriesRouter = require('./routes/filtering/categoriesRoutes');
 const operatingSystemRouter = require('./routes/filtering/operatingSystemRoutes');
 const programmingLanguagesRouter = require('./routes/filtering/programmingLanguagesRoutes');
 const zoneOfInterestRouter = require('./routes/filtering/zoneOfInterestRoutes');
+const accountReportRouter = require('./routes/restrictions/reportHubRoutes');
 
 const app = express();
 
@@ -55,6 +56,7 @@ app.use(`${rootUrl}/categories`, categoriesRouter);
 app.use(`${rootUrl}/operating_systems`, operatingSystemRouter);
 app.use(`${rootUrl}/programming_languages`, programmingLanguagesRouter);
 app.use(`${rootUrl}/zone_of_interests`, zoneOfInterestRouter);
+app.use(`${rootUrl}/reports`, accountReportRouter);
 app.use(`${rootUrl}/events`, eventRouter);
 app.use(`${rootUrl}/discussions`, discussionRouter);
 app.use(`${rootUrl}/integrations`, apiIntegrationsRouter);

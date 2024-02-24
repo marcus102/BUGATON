@@ -251,6 +251,10 @@ const reusableCodeSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    reportCount: {
+      type: Number,
+      default: 0
+    },
     license: String,
     documentationLink: String,
     testingInfo: String,
