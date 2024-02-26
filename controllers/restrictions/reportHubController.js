@@ -27,37 +27,37 @@ exports.setRequiredIds = (req, res, next) => {
 exports.checkInfo = catchAsync(async (req, res, next) => {
   const { bugReport, reusableCode, bugFix, blogPost, targetAccount, user, comment } = req.body;
 
-  let id;
+  let objId;
   let DB;
   let dataField;
 
   if (bugFix) {
-    id = bugFix;
+    objId = bugFix;
     DB = BugFixes;
     dataField = 'bugFix';
   } else if (reusableCode) {
-    id = reusableCode;
+    objId = reusableCode;
     DB = ReusableCode;
     dataField = 'reusableCode';
   } else if (blogPost) {
-    id = blogPost;
+    objId = blogPost;
     DB = Blog;
     dataField = 'blogPost';
   } else if (targetAccount) {
-    id = targetAccount;
+    objId = targetAccount;
     DB = User;
     dataField = 'targetAccount';
   } else if (bugReport) {
-    id = bugReport;
+    objId = bugReport;
     DB = BugReport;
     dataField = 'bugReport';
   } else if (comment) {
-    id = comment;
+    objId = comment;
     DB = Comment;
     dataField = 'comment';
   }
 
-  const targetDoc = await DB.findById(id);
+  const targetDoc = await DB.findById(objId);
 
   if (!targetDoc) {
     return next(appError('You cannot perform this action', 405));

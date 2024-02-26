@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const BugReport = require('./bugReportModel');
 
-const userAttemptSchema = new mongoose.Schema(
+const bugFixSchema = new mongoose.Schema(
   {
     solution: {
       type: String,
@@ -83,13 +83,13 @@ const userAttemptSchema = new mongoose.Schema(
   }
 );
 
-userAttemptSchema.pre('findOneAndUpdate', function(next) {
+bugFixSchema.pre('findOneAndUpdate', function(next) {
   this.getUpdate().updatedAt = Date.now();
 
   next();
 });
 
-userAttemptSchema.pre('save', function(next) {
+bugFixSchema.pre('save', function(next) {
   const fieldsToCheck = ['solution', 'description', 'result', 'frameworkVersions', 'contributors', 'status'];
 
   const isFieldsUnmodified = !fieldsToCheck.some(field => this.isModified(field));
@@ -102,7 +102,7 @@ userAttemptSchema.pre('save', function(next) {
   next();
 });
 
-userAttemptSchema.pre(/^find/, function(next) {
+bugFixSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',
     select: 'username profile'
@@ -114,61 +114,61 @@ userAttemptSchema.pre(/^find/, function(next) {
   next();
 });
 
-userAttemptSchema.virtual('contributors', {
+bugFixSchema.virtual('contributors', {
   ref: 'Contributor',
   localField: '_id',
   foreignField: 'bugFix'
 });
 
-userAttemptSchema.virtual('reviews', {
+bugFixSchema.virtual('reviews', {
   ref: 'Review',
   localField: '_id',
   foreignField: 'bugFix'
 });
 
-userAttemptSchema.virtual('image', {
+bugFixSchema.virtual('image', {
   ref: 'Image',
   localField: '_id',
   foreignField: 'bugFix'
 });
 
-userAttemptSchema.virtual('categories', {
+bugFixSchema.virtual('categories', {
   ref: 'Category',
   localField: 'bugReport',
   foreignField: 'bugReport'
 });
 
-userAttemptSchema.virtual('operatingSystem', {
+bugFixSchema.virtual('operatingSystem', {
   ref: 'OperatingSystem',
   localField: 'bugReport',
   foreignField: 'bugReport'
 });
 
-userAttemptSchema.virtual('programmingLanguages', {
+bugFixSchema.virtual('programmingLanguages', {
   ref: 'Language',
   localField: 'bugReport',
   foreignField: 'bugReport'
 });
 
-userAttemptSchema.virtual('zoneOfInterests', {
+bugFixSchema.virtual('zoneOfInterests', {
   ref: 'ZoneOfInterest',
   localField: 'bugReport',
   foreignField: 'bugReport'
 });
 
-userAttemptSchema.virtual('comments', {
+bugFixSchema.virtual('comments', {
   ref: 'Comment',
   localField: '_id',
   foreignField: 'bugFix'
 });
 
-userAttemptSchema.virtual('childSolutions', {
+bugFixSchema.virtual('childSolutions', {
   ref: 'UserAttempt',
   localField: '_id',
   foreignField: 'parentSolution'
 });
 
-userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
+bugFixSchema.statics.updateBugReportStats = async function(bugID) {
   const stats = await this.aggregate([
     {
       $match: { bugReport: bugID }
@@ -197,10 +197,10 @@ userAttemptSchema.statics.updateBugReportStats = async function(bugID) {
   }
 };
 
-userAttemptSchema.post('save', function() {
+bugFixSchema.post('save', function() {
   this.constructor.updateBugReportStats(this.bugReport);
 });
 
-const UserAttempt = mongoose.model('UserAttempt', userAttemptSchema);
+const BugFixes = mongoose.model('BugFixes', bugFixSchema);
 
-module.exports = UserAttempt;
+module.exports = BugFixes;

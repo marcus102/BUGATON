@@ -72,6 +72,10 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    accountAppealsCount: {
+      type: Number,
+      default: 0
+    },
     password: {
       type: String,
       required: [true, 'User must have a password!'],
@@ -104,7 +108,7 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires: Date,
     acountSatus: {
       type: String,
-      enum: ['healthy', 'warning', 'not healthy'],
+      enum: ['healthy', 'warning', 'banned'],
       default: 'healthy'
     },
     active: {

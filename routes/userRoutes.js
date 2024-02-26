@@ -3,6 +3,7 @@ const userController = require('./../controllers/userController');
 const authenticatioController = require('../controllers/authenticatioController');
 const followersRouter = require('./user_engagement/followersRoutes');
 const reportHubRouter = require('./restrictions/reportHubRoutes');
+const appealHubRouter = require('./restrictions/appealHubRoutes');
 const imageController = require('./../controllers/imagesController');
 
 const router = express.Router({ mergeParams: true });
@@ -13,7 +14,9 @@ router.post('/forgotPassword', authenticatioController.forgotPassword);
 router.patch('/resetPassword/:token', authenticatioController.resetPassword);
 
 router.use('/my-followers', followersRouter);
+// restrictions
 router.use('/:account_id/report_account', reportHubRouter);
+router.use('/account_appeal', appealHubRouter);
 
 router.use(authenticatioController.protect);
 
