@@ -38,7 +38,7 @@ router.use(authenticatioController.protect);
 
 router
   .route('/')
-  .post(blogPostController.setRequiredIds, blogPostController.createBlogPost)
+  .post(blogPostController.createBlogPost)
   .get(blogPostController.getAllBlogPosts);
 
 router

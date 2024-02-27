@@ -40,7 +40,7 @@ router.use(authenticatioController.protect);
 router
   .route('/')
   .get(reusableCodeController.getAllReusableCodes)
-  .post(reusableCodeController.setRequiredIds, reusableCodeController.createReusableCode);
+  .post(reusableCodeController.createReusableCode);
 router
   .route('/:id')
   .get(reusableCodeController.getReusableCode)

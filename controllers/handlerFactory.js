@@ -98,20 +98,17 @@ exports.handleBugAssignment = (operation, userDB, bugReportDB) =>
   catchAsync(async (req, res, next) => {
     const { assigneeId, id } = req.params;
     const bug = await bugReportDB.findById(id);
+    const userExist = await userDB.findById(assigneeId);
 
-    if (!bug) {
+    if (!(bug && userExist)) {
       return next(appError('Document not found', 404));
     }
 
-    const userExists = await userDB.findById(assigneeId);
-
-    if (!userExists) {
-      return next(appError('User not found', 404));
-    }
+    const { assignedTo } = bug;
 
     if (operation === 'assign') {
-      if (bug.assignedTo) {
-        const assignedToIds = bug.assignedTo.map(user => user._id.toString());
+      if (assignedTo) {
+        const assignedToIds = assignedTo.map(user => user._id.toString());
         if (assignedToIds.includes(assigneeId)) {
           return next(appError('Bug already assigned to user', 409));
         }
@@ -119,11 +116,11 @@ exports.handleBugAssignment = (operation, userDB, bugReportDB) =>
 
       await bugReportDB.updateOne({ _id: id }, { $push: { assignedTo: assigneeId } });
     } else if (operation === 'deassign') {
-      if (!bug.assignedTo) {
+      if (!assignedTo) {
         return next(appError('Bug has not been assigned to a user yet!', 404));
       }
 
-      const assignedToIds = bug.assignedTo.map(user => user._id.toString());
+      const assignedToIds = assignedTo.map(user => user._id.toString());
       if (!assignedToIds.includes(assigneeId)) {
         return next(appError('Bug already deassigned from user', 404));
       }
