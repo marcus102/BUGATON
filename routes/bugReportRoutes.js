@@ -39,7 +39,7 @@ router.use(authenticatioController.protect);
 router
   .route('/')
   .get(bugReportController.getAllBugs)
-  .post(bugReportController.setRequiredIds, bugReportController.createBug);
+  .post(bugReportController.createBug);
 
 router
   .route('/:id')
@@ -61,12 +61,8 @@ router
     bugReportController.deleteBug
   );
 
-router.patch('/:id/assignBugTo/:assigneeId', bugReportController.setRequiredIds, bugReportController.assignBugToUser);
+router.patch('/:id/assignBugTo/:assigneeId', bugReportController.assignBugToUser);
 
-router.patch(
-  '/:id/deassignBugTo/:assigneeId',
-  bugReportController.setRequiredIds,
-  bugReportController.deassignBugFromUser
-);
+router.patch('/:id/deassignBugTo/:assigneeId', bugReportController.deassignBugFromUser);
 
 module.exports = router;

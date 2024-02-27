@@ -8,39 +8,81 @@ exports.setRequiredIds = (req, res, next) => {
     if (!req.body[field]) req.body[field] = value;
   };
   setIfUndefined('user', req.user.id);
-  setIfUndefined('bugReport', req.params.bug_id);
-  setIfUndefined('bugFix', req.params.bug_fixes_id);
-  setIfUndefined('reusableCode', req.params.reusable_code_id);
-  setIfUndefined('blogPost', req.params.blog_post_id);
+  setIfUndefined('bugReport_', req.params.bug_id);
+  setIfUndefined('bugFix_', req.params.bug_fixes_id);
+  setIfUndefined('reusableCode_', req.params.reusable_code_id);
+  setIfUndefined('blogPost_', req.params.blog_post_id);
 
   next();
 };
 
 exports.createComment = catchAsync(async (req, res, next) => {
-  const { user, bugReport, bugFix, reusableCode, comment, blogPost } = req.body;
+  const { user, bugReport_, bugFix_, reusableCode_, comment, blogPost_ } = req.body;
   const { id } = req.params;
+  if (!id) {
+    let dataField;
 
-  if (!(bugReport || bugFix || reusableCode || blogPost)) {
-    return next(appError('You are not allowed to perform this action!', 405));
+    if (bugFix_) {
+      dataField = bugFix_;
+    } else if (reusableCode_) {
+      dataField = reusableCode_;
+    } else if (blogPost_) {
+      dataField = blogPost_;
+    } else if (bugReport_) {
+      dataField = bugReport_;
+    }
+
+    if (!dataField) {
+      return next(appError('You are not allowed to perform this action!', 405));
+    }
+
+    const createComment = await Comment.create({
+      comment: comment,
+      parentComment: id,
+      user: user,
+      bugReport: bugReport_,
+      bugFix: bugFix_,
+      reusableCode: reusableCode_,
+      blogPost: blogPost_
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: createComment
+    });
   }
 
-  const createComment = await Comment.create({
-    comment: comment,
-    parentComment: id,
-    user: user,
-    bugReport: bugReport,
-    bugFix: bugFix,
-    reusableCode: reusableCode,
-    blogPost: blogPost
-  });
+  if (id) {
+    const targetComment = await Comment.findById(id);
 
-  res.status(201).json({
-    status: 'success',
-    data: createComment
-  });
+    if (!targetComment) {
+      return next(appError('Parent comment does not exist!', 405));
+    }
+
+    const { bugReport, bugFix, reusableCode, blogPost } = targetComment;
+
+    const createComment = await Comment.create({
+      comment: comment,
+      parentComment: id,
+      user: user,
+      bugReport: bugReport && bugReport.valueOf(),
+      bugFix: bugFix && bugFix.valueOf(),
+      reusableCode: reusableCode && reusableCode.valueOf(),
+      blogPost: blogPost && blogPost.valueOf()
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: createComment
+    });
+  }
 });
+
 exports.getAllComments = factory.getAll(Comment, { path: 'childComments' });
 exports.getComment = factory.getOne(Comment, [{ path: 'childComments' }, { path: 'likes' }]);
+
+exports.getPostComment = catchAsync(async (req, res, next) => {});
+
 exports.deleteComment = factory.deleteOne(Comment);
 exports.updateComment = factory.updateOne(Comment);
 exports.deleteMultipleBugFixesCommentsById = factory.deleteMany(Comment, 'bugFix');

@@ -68,6 +68,18 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    bugReportCount: {
+      type: Number,
+      default: 0
+    },
+    bugFixesCount: {
+      type: Number,
+      default: 0
+    },
+    reusableCodeCount: {
+      type: Number,
+      default: 0
+    },
     reportCount: {
       type: Number,
       default: 0

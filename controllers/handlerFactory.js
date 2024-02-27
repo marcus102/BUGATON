@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const fs = require('fs');
 const APIFeatures = require('./../utils/apiFeatures');
+const User = require('./../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
 const appError = require('./../utils/appError');
 
@@ -93,11 +94,10 @@ exports.getAll = Model =>
     });
   });
 
-exports.handleAssignment = (operation, userDB, bugReportDB) =>
+exports.handleBugAssignment = (operation, userDB, bugReportDB) =>
   catchAsync(async (req, res, next) => {
-    const bugId = req.body.bugReport;
-    const { assigneeId } = req.params;
-    const bug = await bugReportDB.findById(bugId);
+    const { assigneeId, id } = req.params;
+    const bug = await bugReportDB.findById(id);
 
     if (!bug) {
       return next(appError('Document not found', 404));
@@ -117,7 +117,7 @@ exports.handleAssignment = (operation, userDB, bugReportDB) =>
         }
       }
 
-      await bugReportDB.updateOne({ _id: bugId }, { $push: { assignedTo: assigneeId } });
+      await bugReportDB.updateOne({ _id: id }, { $push: { assignedTo: assigneeId } });
     } else if (operation === 'deassign') {
       if (!bug.assignedTo) {
         return next(appError('Bug has not been assigned to a user yet!', 404));
@@ -128,10 +128,10 @@ exports.handleAssignment = (operation, userDB, bugReportDB) =>
         return next(appError('Bug already deassigned from user', 404));
       }
 
-      await bugReportDB.updateOne({ _id: bugId }, { $pull: { assignedTo: assigneeId } });
+      await bugReportDB.updateOne({ _id: id }, { $pull: { assignedTo: assigneeId } });
     }
 
-    const updatedBug = await bugReportDB.findById(bugId);
+    const updatedBug = await bugReportDB.findById(id);
 
     res.status(200).json({
       status: 'success',
@@ -139,18 +139,16 @@ exports.handleAssignment = (operation, userDB, bugReportDB) =>
     });
   });
 
-exports.deleteMany = (Model, field, setIds) =>
+exports.deleteMany = (Model, field, setIds, UserModel) =>
   catchAsync(async (req, res, next) => {
-    const { id } = req.params;
-
-    if (!id) {
+    if (!req.params.id) {
       return next(appError('Something went wrong! ID not found!', 404));
     }
 
     const docToDelete = await Model.aggregate([
       {
         $match: {
-          [field]: new mongoose.Types.ObjectId(id)
+          [field]: new mongoose.Types.ObjectId(req.params.id)
         }
       }
     ]);
@@ -158,6 +156,8 @@ exports.deleteMany = (Model, field, setIds) =>
     if (docToDelete.length === 0) {
       return next();
     }
+
+    const deletedCount = docToDelete.length;
 
     if (setIds && setIds === true) {
       const bugFixIds = docToDelete.reduce((acc, doc) => {
@@ -178,6 +178,19 @@ exports.deleteMany = (Model, field, setIds) =>
 
     if (!deletionResult.deletedCount > 0) {
       return next(appError('Failed to delete documents!', 500));
+    }
+
+    let fieldCount;
+    if (field === 'bugReport') {
+      fieldCount = 'bugReportCount';
+    } else if (field === 'bugFix') {
+      fieldCount = 'bugFixesCount';
+    } else if (field === 'reusableCode') {
+      fieldCount = 'reusableCodeCount';
+    }
+
+    if (UserModel === true) {
+      await User.findByIdAndUpdate(req.user.id, { $inc: { [fieldCount]: -deletedCount } });
     }
 
     next();

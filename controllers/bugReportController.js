@@ -1,21 +1,23 @@
 const BugReport = require('./../models/bugReportModel');
 const User = require('./../models/userModel');
 const factory = require('./handlerFactory');
+const catchAsync = require('./../utils/catchAsync');
+const appError = require('./../utils/appError');
 
-exports.setRequiredIds = (req, res, next) => {
-  const setIfUndefined = (field, value) => {
-    if (!req.body[field]) req.body[field] = value;
-  };
-  setIfUndefined('user', req.user.id);
-  setIfUndefined('bugReport', req.params.id);
+exports.assignBugToUser = factory.handleBugAssignment('assign', User, BugReport);
+exports.deassignBugFromUser = factory.handleBugAssignment('deassign', User, BugReport);
 
-  next();
-};
+exports.createBug = catchAsync(async (req, res, next) => {
+  const newBugReport = await BugReport.create(req.body);
 
-exports.assignBugToUser = factory.handleAssignment('assign', User, BugReport);
-exports.deassignBugFromUser = factory.handleAssignment('deassign', User, BugReport);
+  await User.findByIdAndUpdate(req.user.id, { $inc: { bugReportCount: 1 } });
 
-exports.createBug = factory.createOne(BugReport);
+  res.status(201).json({
+    status: 'success',
+    data: newBugReport
+  });
+});
+
 exports.getAllBugs = factory.getAll(BugReport);
 exports.getBug = factory.getOne(BugReport, [
   { path: 'userAttempts' },
@@ -28,4 +30,18 @@ exports.getBug = factory.getOne(BugReport, [
   { path: 'zoneOfInterests' }
 ]);
 exports.updateBug = factory.updateOne(BugReport);
-exports.deleteBug = factory.deleteOne(BugReport);
+
+exports.deleteBug = catchAsync(async (req, res, next) => {
+  const doc = await BugReport.findByIdAndDelete(req.params.id);
+
+  if (!doc) {
+    return next(appError('No document found with that ID! ', 404));
+  }
+
+  await User.findByIdAndUpdate(req.user.id, { $inc: { bugReportCount: -1 } });
+
+  res.status(200).json({
+    status: 'success',
+    data: null
+  });
+});
