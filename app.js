@@ -30,6 +30,7 @@ const programmingLanguagesRouter = require('./routes/filtering/programmingLangua
 const zoneOfInterestRouter = require('./routes/filtering/zoneOfInterestRoutes');
 const reportHubRouter = require('./routes/restrictions/reportHubRoutes');
 const appealHubRouter = require('./routes/restrictions/appealHubRoutes');
+const blockedUserRouter = require('./routes/restrictions/blockedUserRoutes');
 
 const app = express();
 
@@ -59,6 +60,7 @@ app.use(`${rootUrl}/programming_languages`, programmingLanguagesRouter);
 app.use(`${rootUrl}/zone_of_interests`, zoneOfInterestRouter);
 app.use(`${rootUrl}/reports`, reportHubRouter);
 app.use(`${rootUrl}/appeals`, appealHubRouter);
+app.use(`${rootUrl}/blocks`, blockedUserRouter);
 //pending
 app.use(`${rootUrl}/events`, eventRouter);
 app.use(`${rootUrl}/discussions`, discussionRouter);

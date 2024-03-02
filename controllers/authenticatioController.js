@@ -46,6 +46,8 @@ exports.signUp = catchAsync(async (req, res, next) => {
     passwordConfirm: passwordConfirm
   });
 
+  req.newUser = newUser;
+
   createAndSendToken(newUser, 201, res);
 });
 

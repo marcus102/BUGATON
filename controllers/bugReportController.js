@@ -1,5 +1,6 @@
 const BugReport = require('./../models/bugReportModel');
 const User = require('./../models/userModel');
+const BlockedUser = require('./../models/restrictions/blockedUserModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('./../utils/catchAsync');
 const appError = require('./../utils/appError');
@@ -8,7 +9,32 @@ exports.assignBugToUser = factory.handleBugAssignment('assign', User, BugReport)
 exports.deassignBugFromUser = factory.handleBugAssignment('deassign', User, BugReport);
 
 exports.createBug = catchAsync(async (req, res, next) => {
-  const newBugReport = await BugReport.create(req.body);
+  const {
+    title,
+    description,
+    stepsToReproduce,
+    expectedBehavior,
+    actualBehavior,
+    bug,
+    browser,
+    device,
+    severity
+  } = req.body;
+
+  const newBugReport = new BugReport({
+    title: title,
+    description: description,
+    stepsToReproduce: stepsToReproduce,
+    expectedBehavior: expectedBehavior,
+    actualBehavior: actualBehavior,
+    bug: bug,
+    browser: browser,
+    device: device,
+    severity: severity,
+    user: req.user.id
+  });
+
+  await newBugReport.save();
 
   await User.findByIdAndUpdate(req.user.id, { $inc: { bugReportCount: 1 } });
 
@@ -18,17 +44,6 @@ exports.createBug = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getAllBugs = factory.getAll(BugReport);
-exports.getBug = factory.getOne(BugReport, [
-  { path: 'userAttempts' },
-  { path: 'image' },
-  { path: 'contributors' },
-  { path: 'comments' },
-  { path: 'categories' },
-  { path: 'operatingSystem' },
-  { path: 'programmingLanguages' },
-  { path: 'zoneOfInterests' }
-]);
 exports.updateBug = factory.updateOne(BugReport);
 
 exports.deleteBug = catchAsync(async (req, res, next) => {
@@ -45,3 +60,17 @@ exports.deleteBug = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.filterBlockedBugs = factory.blocksHandler(BlockedUser, 'bug_ids');
+
+exports.getAllBugs = factory.getAll(BugReport, 'bug_ids');
+exports.getBug = factory.getOne(BugReport, [
+  { path: 'userAttempts' },
+  { path: 'image' },
+  { path: 'contributors' },
+  { path: 'comments' },
+  { path: 'categories' },
+  { path: 'operatingSystem' },
+  { path: 'programmingLanguages' },
+  { path: 'zoneOfInterests' }
+]);

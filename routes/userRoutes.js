@@ -4,6 +4,7 @@ const authenticatioController = require('../controllers/authenticatioController'
 const followersRouter = require('./user_engagement/followersRoutes');
 const reportHubRouter = require('./restrictions/reportHubRoutes');
 const appealHubRouter = require('./restrictions/appealHubRoutes');
+const blockedUserRouter = require('./restrictions/blockedUserRoutes');
 const imageController = require('./../controllers/imagesController');
 
 const router = express.Router({ mergeParams: true });
@@ -17,6 +18,7 @@ router.use('/my-followers', followersRouter);
 // restrictions
 router.use('/:account_id/report_account', reportHubRouter);
 router.use('/account_appeal', appealHubRouter);
+router.use('/:account_id/block', blockedUserRouter);
 
 router.use(authenticatioController.protect);
 

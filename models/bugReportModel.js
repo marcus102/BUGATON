@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// const BlockedUser = require('./restrictions/blockedUserModel');
 
 const bugReportSchema = new mongoose.Schema(
   {
@@ -154,6 +155,11 @@ bugReportSchema.pre(/^find/, function(next) {
 
   next();
 });
+
+// bugReportSchema.pre(/^find/, async function(next) {
+//   const myBlocks = await BlockedUser.findById(this.user);
+//   next();
+// });
 
 const BugReport = mongoose.model('BugReport', bugReportSchema);
 

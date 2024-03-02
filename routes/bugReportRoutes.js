@@ -38,7 +38,7 @@ router.use(authenticatioController.protect);
 
 router
   .route('/')
-  .get(bugReportController.getAllBugs)
+  .get(bugReportController.filterBlockedBugs, bugReportController.getAllBugs)
   .post(bugReportController.createBug);
 
 router

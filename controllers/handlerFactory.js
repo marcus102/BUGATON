@@ -64,18 +64,23 @@ exports.getOne = (Model, populateOptions) =>
 
     res.status(200).json({
       status: 'success',
+      requested_at: req.requestTime,
       data: doc
     });
   });
 
-exports.getAll = Model =>
+exports.getAll = (Model, excludedIdsParam) =>
   catchAsync(async (req, res, next) => {
-    // for nested get reviews
-    // let filter = {};
-    // if (req.params.id) {
-    //   filter = { tour: req.params.id };
-    // }
-    const features = new APIFeatures(Model.find(), req.query)
+    let filter = null;
+    const excludedIds = req.body[excludedIdsParam];
+
+    if (excludedIds && excludedIds.length > 0) {
+      filter = {
+        user: { $nin: excludedIds }
+      };
+    }
+
+    const features = new APIFeatures(Model.find(filter), req.query)
       .filter()
       .sort()
       .limitFields()
@@ -92,6 +97,47 @@ exports.getAll = Model =>
       result: doc.length,
       data: doc
     });
+  });
+
+exports.blocksHandler = (Model, target) =>
+  catchAsync(async (req, res, next) => {
+    const blockers = await Model.aggregate([
+      {
+        $match: {
+          blockedUser: new mongoose.Types.ObjectId(req.user.id)
+        }
+      }
+    ]);
+
+    const blocked = await Model.aggregate([
+      {
+        $match: {
+          blockedBy: new mongoose.Types.ObjectId(req.user.id)
+        }
+      }
+    ]);
+
+    if ((blockers.length || blocked.length) === 0) {
+      return next();
+    }
+
+    const blockersIds = blockers.reduce((acc, doc) => {
+      if (doc.blockedBy) {
+        acc.push(doc.blockedBy.valueOf());
+      }
+      return acc;
+    }, []);
+
+    const blokedIds = blocked.reduce((acc, doc) => {
+      if (doc.blockedUser) {
+        acc.push(doc.blockedUser.valueOf());
+      }
+      return acc;
+    }, []);
+
+    req.body[target] = [...blockersIds, ...blokedIds];
+
+    next();
   });
 
 exports.handleBugAssignment = (operation, userDB, bugReportDB) =>

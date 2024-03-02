@@ -4,6 +4,7 @@ const BugFixes = require('./../models/bugFixesModel');
 const BugReport = require('./../models/bugReportModel');
 const Contributor = require('./../models/user_engagement/contributorsModel');
 const User = require('./../models/userModel');
+const BlockedUser = require('./../models/restrictions/blockedUserModel');
 const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const filterParams = require('./../utils/filterParams');
@@ -66,7 +67,9 @@ exports.createBugFix = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.getALLBugFixes = factory.getAll(BugFixes, { path: 'childSolutions' });
+exports.filterBlockedBugFixes = factory.blocksHandler(BlockedUser, 'bug_fix_ids');
+
+exports.getALLBugFixes = factory.getAll(BugFixes, 'bug_fix_ids');
 exports.getBugFix = factory.getOne(BugFixes, [
   { path: 'image' },
   { path: 'reviews' },

@@ -20,17 +20,19 @@ const userSchema = new mongoose.Schema(
       unique: [true, 'Sorry, the username is already in use. Please choose another one!'],
       trim: true
     },
-    email: {
-      type: String,
-      required: [true, 'User must have an email address!'],
-      unique: [true, 'Sorry email already exist!! try another one!'],
-      trim: true,
-      lowercase: true,
-      validate: {
-        validator: validator.isEmail,
-        message: 'Please provide a valid email!'
+    email: [
+      {
+        type: String,
+        required: [true, 'User must have an email address!'],
+        unique: [true, 'Sorry email already exist!! try another one!'],
+        trim: true,
+        lowercase: true,
+        validate: {
+          validator: validator.isEmail,
+          message: 'Please provide a valid email!'
+        }
       }
-    },
+    ],
     phone: {
       type: String,
       validate: {
@@ -53,6 +55,11 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'moderator', 'collaborator', 'admin'],
       default: 'user'
     },
+    profession: [
+      {
+        type: String
+      }
+    ],
     links: [
       {
         type: String,
