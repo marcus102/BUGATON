@@ -5,17 +5,15 @@ const factory = require('./handlerFactory');
 const catchAsync = require('../utils/catchAsync');
 const appError = require('../utils/appError');
 
-// exports.setRequiredIds = (req, res, next) => {
-//   const setIfUndefined = (field, value) => {
-//     if (!req.body[field]) req.body[field] = value;
-//   };
-//   setIfUndefined('user', req.user.id);
-
-//   next();
-// };
-
 exports.createBlogPost = catchAsync(async (req, res, next) => {
-  const newBlogPost = await Blog.create(req.body);
+  const { content, title } = req.body;
+  const newBlogPost = new Blog({
+    title: title,
+    content: content,
+    user: req.user.id
+  });
+
+  await newBlogPost.save();
 
   await User.findByIdAndUpdate(req.user.id, { $inc: { blogPostCount: 1 } });
 

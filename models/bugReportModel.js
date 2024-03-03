@@ -23,7 +23,7 @@ const bugReportSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Provide the actual behavior to help users understand more']
     },
-    bug: {
+    codeSnippet: {
       type: String,
       required: [true, 'The bug is required!']
     },

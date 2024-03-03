@@ -15,7 +15,7 @@ exports.createBug = catchAsync(async (req, res, next) => {
     stepsToReproduce,
     expectedBehavior,
     actualBehavior,
-    bug,
+    codeSnippet,
     browser,
     device,
     severity
@@ -27,7 +27,7 @@ exports.createBug = catchAsync(async (req, res, next) => {
     stepsToReproduce: stepsToReproduce,
     expectedBehavior: expectedBehavior,
     actualBehavior: actualBehavior,
-    bug: bug,
+    codeSnippet: codeSnippet,
     browser: browser,
     device: device,
     severity: severity,
