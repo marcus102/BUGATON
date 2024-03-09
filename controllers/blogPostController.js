@@ -26,6 +26,7 @@ exports.createBlogPost = catchAsync(async (req, res, next) => {
 exports.filterBlockedBugFixes = factory.blocksHandler(BlockedUser, 'blog_post_ids');
 
 exports.getAllBlogPosts = factory.getAll(Blog, 'blog_post_ids');
+
 exports.getBlogPost = factory.getOne(Blog, [
   { path: 'reviews' },
   { path: 'likes' },
@@ -35,6 +36,7 @@ exports.getBlogPost = factory.getOne(Blog, [
   { path: 'programmingLanguages' },
   { path: 'zoneOfInterests' }
 ]);
+
 exports.updateBolgPost = factory.updateOne(Blog);
 
 exports.deleteBlogPost = catchAsync(async (req, res, next) => {

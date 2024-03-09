@@ -14,7 +14,8 @@ router
 router
   .route('/id')
   .get(blockedUserController.getBlockedUser)
-  .patch(blockedUserController.updateBlockedUser)
-  .delete(blockedUserController.unblockedUserHandler);
+  .patch(blockedUserController.updateBlockedUser);
+
+router.delete('/:id/unblock', blockedUserController.unblockedUserHandler);
 
 module.exports = router;

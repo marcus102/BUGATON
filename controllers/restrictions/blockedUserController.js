@@ -37,4 +37,24 @@ exports.blockUserHandler = catchAsync(async (req, res, next) => {
 exports.getAllBlockedUsers = factory.getAll(BlockedUser);
 exports.getBlockedUser = factory.getOne(BlockedUser);
 exports.updateBlockedUser = factory.updateOne(BlockedUser);
-exports.unblockedUserHandler = factory.deleteOne(BlockedUser);
+
+exports.unblockedUserHandler = catchAsync(async (req, res, next) => {
+  const blockedUserDoc = await BlockedUser.findById(req.params.id);
+
+  if (!blockedUserDoc) {
+    return next(appError('Document with that ID does not exist!', 405));
+  }
+
+  const { blockedBy } = blockedUserDoc;
+
+  if (!blockedBy.valueOf() === req.user.id) {
+    return next(appError('You cannot unblock a user that you have not blocked!', 401));
+  }
+
+  await BlockedUser.findByIdAndDelete(req.params.id);
+
+  res.status(200).json({
+    status: 'success',
+    data: null
+  });
+});
