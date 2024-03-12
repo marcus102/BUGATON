@@ -79,7 +79,7 @@ exports.createComment = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllComments = factory.getAll(Comment, { path: 'childComments' });
-exports.getComment = factory.getOne(Comment, [{ path: 'childComments' }, { path: 'likes' }]);
+exports.getComment = factory.getOne(Comment, [{ path: 'childComments' }, { path: 'likes' }, { path: 'images' }]);
 
 exports.getPostComment = catchAsync(async (req, res, next) => {});
 

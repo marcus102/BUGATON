@@ -74,6 +74,12 @@ commentSchema.virtual('likes', {
   foreignField: 'comment'
 });
 
+commentSchema.virtual('images', {
+  ref: 'Image',
+  localField: '_id',
+  foreignField: 'comment'
+});
+
 commentSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'user',

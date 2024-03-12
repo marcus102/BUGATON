@@ -96,7 +96,8 @@ exports.createImage = catchAsync(async (req, res, next) => {
     bugReport,
     reusableCode,
     bugFix,
-    blogPost
+    blogPost,
+    comment
   } = req.body;
   const { mimetype, size } = req.file;
 
@@ -107,7 +108,7 @@ exports.createImage = catchAsync(async (req, res, next) => {
   let updatedUsername = username;
   let imgDirectory = 'profiles';
 
-  if (bugReport || bugFix || reusableCode || blogPost) {
+  if (bugReport || bugFix || reusableCode || blogPost || comment) {
     updatedUsername = null;
     imgDirectory = 'images';
   }
@@ -126,7 +127,8 @@ exports.createImage = catchAsync(async (req, res, next) => {
     bugReport: bugReport,
     reusableCode: reusableCode,
     bugFix: bugFix,
-    blogPost: blogPost
+    blogPost: blogPost,
+    comment: comment
   });
 
   res.status(201).json({
